@@ -11,7 +11,7 @@ export default function Layout() {
                 <div className="h-full col-span-2 sticky top-0 hidden lg:block">
                     <SideMenu />
                 </div>
-                <div className='col-span-12 lg:col-span-10 bg-red-100'>
+                <div className='col-span-12 max-h-full lg:col-span-10 p-6 h-full overflow-x-auto'>
                     <Outlet />
                 </div>
             </div>

@@ -1,38 +1,32 @@
 import {
-    Card,
-    Typography,
     List,
     ListItem,
     ListItemPrefix,
-    ListItemSuffix,
-    Chip,
-    ListStylesType
 } from "@material-tailwind/react";
 import {
     PresentationChartBarIcon,
-    ShoppingBagIcon,
     UserCircleIcon,
-    Cog6ToothIcon,
-    InboxIcon,
-    PowerIcon,
-    PaperClipIcon,
     PencilIcon,
     NewspaperIcon,
     BanknotesIcon,
     LifebuoyIcon,
 } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";
 
 export default function SideMenu() {
+
+    const navigate = useNavigate();
+
     return (
         <div className="h-full p-4 bg-primary text-white">
             <List>
-                <ListItem className="w-full">
+                <ListItem onClick={() => { navigate('/') }}>
                     <ListItemPrefix>
                         <PresentationChartBarIcon className="h-5 w-5" />
                     </ListItemPrefix>
                     Dashboard
                 </ListItem>
-                <ListItem>
+                <ListItem onClick={() => { navigate('/setup') }} >
                     <ListItemPrefix>
                         <PencilIcon className="h-5 w-5" />
                     </ListItemPrefix>
@@ -64,6 +58,6 @@ export default function SideMenu() {
                     Help
                 </ListItem>
             </List>
-        </div>
+        </div >
     );
 }

@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function Dummy() {
+export default function Dashboard() {
     return (
         <>
-            sfsdfsdf
+            Dashboard
         </>
     )
 }
