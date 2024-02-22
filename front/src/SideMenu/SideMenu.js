@@ -12,6 +12,7 @@ import {
     LifebuoyIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
+import YDivider from "../ComponentUtils/YDivider";
 
 export default function SideMenu() {
 
@@ -44,7 +45,7 @@ export default function SideMenu() {
                     </ListItemPrefix>
                     Reports
                 </ListItem>
-                <hr className="my-2 border-blue-gray-50" />
+                <YDivider />
                 <ListItem>
                     <ListItemPrefix>
                         <UserCircleIcon className="h-5 w-5" />

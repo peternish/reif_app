@@ -46,7 +46,7 @@ function ProfileMenu() {
                         size="sm"
                         alt="tania andrew"
                         className="border border-gray-900 p-0.5"
-                        src="avatar.png"
+                        src="img/avatar.png"
                     />
                     Graylan Stewart
                     <ChevronDownIcon
