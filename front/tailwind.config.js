@@ -7,7 +7,10 @@ module.exports = withMT({
       colors: {
         'header': '#41BA6E',
         'primary': '#4bca78'
-      }
+      },
+      width: {
+        'container': '70%',
+      },
     },
   },
   plugins: [],

@@ -8,8 +8,8 @@ export default function CategoryItem() {
             sadsddas
             <ListItemSuffix>
                 <div className="flex">
-                    <PencilIcon className="w-5" />
-                    <TrashIcon className="w-5 text-red-500 ml-2" />
+                    <PencilIcon className="w-5 hover:scale-150" />
+                    <TrashIcon className="w-5 hover:scale-150 text-red-500 ml-4" />
                 </div>
             </ListItemSuffix>
         </ListItem>

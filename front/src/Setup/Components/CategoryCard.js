@@ -6,7 +6,7 @@ import YDivider from "../../ComponentUtils/YDivider";
 
 export default function CategoryCard(props) {
     return (
-        <Card className="min-h-full p-3">
+        <Card className="h-[85%] p-3">
             <div className="w-full flex justify-between items-center">
                 <h1>{props.title}</h1>
                 <AddButton />

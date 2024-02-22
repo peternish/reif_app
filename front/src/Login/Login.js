@@ -18,8 +18,8 @@ export default function Login() {
 
     return (
         <div className="w-screen h-screen grid grid-cols-3">
-            <div className="col-span-2 bg-no-repeat bg-center bg-contain flex flex-col justify-center bg-primary">
-                <div className="w-full h-[40%] flex flex-col justify-center items-center py-6 text-white ">
+            <div className="col-span-3 md:col-span-2 bg-no-repeat bg-center bg-contain flex flex-col justify-center bg-primary p-3 text-center">
+                <div className="w-full md:h-[40%] flex flex-col justify-center items-center py-6 text-white ">
                     <h1 className="text-[3rem]">
                         REI Financials
                     </h1>
@@ -33,10 +33,10 @@ export default function Login() {
                         Sign Up
                     </Button>
                 </div>
-                <div className="w-full h-[60%] bg-no-repeat flex bg-center" style={{ backgroundImage: `url('img/hero-img.svg')` }}>
+                <div className="w-full hidden md:block h-[60%] bg-no-repeat flex bg-center" style={{ backgroundImage: `url('img/hero-img.svg')` }}>
                 </div>
             </div>
-            <div className="col-span-1 flex items-center justify-center">
+            <div className="col-span-3 md:col-span-1 flex items-center justify-center">
                 <Card className="w-96 shadow-none">
                     <CardBody className="flex flex-col gap-4">
                         <Typography variant="h3" className="my-3">

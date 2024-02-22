@@ -6,11 +6,13 @@ import {
     TabPanel,
 } from "@material-tailwind/react";
 import BusinessCategory from "./Tabs/BusinessCategory";
+import ExpenseCategory from "./Tabs/ExpenseCategory";
+import Vendor from "./Tabs/Vendor";
 
 export default function Setup() {
 
     return (
-        <Tabs value="business" className="w-full h-full min-w-[50rem]">
+        <Tabs value="business" className="w-full h-full min-w-[60rem]">
             <TabsHeader
                 className="bg-transparent"
                 indicatorProps={{
@@ -31,11 +33,11 @@ export default function Setup() {
                 <TabPanel key='business' value='business' className="h-full" >
                     <BusinessCategory />
                 </TabPanel>
-                <TabPanel key='expense' value='expense' className="h-full" >
-                    sf
+                <TabPanel key='expense' value='expense' className="h-full flex flex-col items-center" >
+                    <ExpenseCategory />
                 </TabPanel>
-                <TabPanel key='vendor' value='vendor' className="h-full" >
-                    sf
+                <TabPanel key='vendor' value='vendor' className="h-full flex flex-col items-center" >
+                    <Vendor />
                 </TabPanel>
             </TabsBody>
         </Tabs>
