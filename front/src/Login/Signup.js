@@ -1,11 +1,63 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Checkbox, Input, Option, Select, Typography } from "@material-tailwind/react";
-import React from "react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Checkbox, IconButton, Input, Option, Select, Typography } from "@material-tailwind/react";
+import { EyeDropperIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
+import React, { useEffect, useState } from "react";
 import YDivider from "../ComponentUtils/YDivider";
 import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
 
     const navigate = useNavigate()
+
+    const employeeNumberObj = {
+        'Only Me': 1,
+        '2 - 5': 2,
+        '6 - 10': 6,
+        '11 - 20': 11,
+        '21 - 50': 21,
+        '51 - 100': 51,
+        'More than 100': 100
+    }
+
+    const [userData, setUserData] = useState({
+        name: '',
+        companyName: '',
+        employeeNumber: '',
+        email: '',
+        emailConfirm: '',
+        password: '',
+        passwordConfirm: '',
+    })
+
+    const [emailConfirmErrorMessage, setEmailConfirmErrorMessage] = useState('')
+    const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
+
+    const handleInput = (name, value) => {
+        setUserData({
+            ...userData,
+            [name]: value
+        })
+    }
+
+    const signup = async (e) => {
+        e.preventDefault();
+
+    }
+
+    useEffect(() => {
+        if (!userData.email || !userData.emailConfirm || userData.email == userData.emailConfirm) {
+            setEmailConfirmErrorMessage('')
+        }
+        else {
+            setEmailConfirmErrorMessage("Email doesn' t match")
+        }
+        if (!userData.password || !userData.passwordConfirm || userData.password == userData.passwordConfirm) {
+            setPasswordConfirmErrorMessage('')
+        }
+        else {
+            setPasswordConfirmErrorMessage("Password doesn' t match")
+        }
+    }, [userData])
 
     return (
         <div className="w-screen h-screen grid grid-cols-3">
@@ -28,49 +80,110 @@ export default function Signup() {
             </div>
             <div className="col-span-3 md:col-span-1 flex items-center justify-center">
                 <Card className="w-96 shadow-none">
-                    <CardBody className="flex flex-col gap-4">
-                        <Typography variant="h3" className="my-3">
-                            Sign Up
-                        </Typography>
-                        <Input label="Full Name" />
-                        <Input label="Company Name" />
-                        <Select label="Employees">
-                            <Option>Only Me</Option>
-                            <Option>2-5</Option>
-                            <Option>6-10</Option>
-                            <Option>11-20</Option>
-                            <Option>21-50</Option>
-                            <Option>51-100</Option>
-                            <Option>More than 100</Option>
-                        </Select>
-                        <Input label="Email" type="email" size="lg" />
-                        <Input label="Confirm Email" type="email" size="lg" />
-                        <Input label="Password" type="password" size="lg" />
-                        <Input label="Confirm Password" type="password" size="lg" />
-                    </CardBody>
-                    <CardFooter className="pt-0">
-                        <Button fullWidth className="bg-primary">
-                            Sign Up
-                        </Button>
-                        <Typography variant="small" className="mt-6 flex justify-center">
-                            Already have an account?
-                            <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="ml-1 font-bold cursor-pointer"
-                                onClick={() => navigate('/login')}
-                            >
-                                Sign In
+                    <form onSubmit={(e) => signup(e)}>
+                        <CardBody className="flex flex-col gap-4">
+                            <Typography variant="h3" className="my-3">
+                                Sign Up
                             </Typography>
-                        </Typography>
-                        <YDivider />
-                        <div className="flex justify-center w-full justify-center my-3">
-                            <i className=" ml-6 cursor-pointer fa-brands fa-google"></i>
-                            <i className=" ml-6 cursor-pointer fa-brands fa-x-twitter"></i>
-                            <i className=" ml-6 cursor-pointer fa-brands fa-linkedin-in"></i>
-                            <i className=" ml-6 cursor-pointer fa-brands fa-apple"></i>
-                        </div>
-                    </CardFooter>
+                            <Input
+                                name="name"
+                                label="Full Name"
+                                required
+                                onChange={(e) => handleInput(e.target.name, e.target.value)}
+                            />
+
+                            <Input
+                                name="companyName"
+                                label="Company Name"
+                                required
+                                onChange={(e) => handleInput(e.target.name, e.target.value)}
+                            />
+
+                            <Select
+                                name="employeeNumber"
+                                label="Employees"
+                                required
+                                onChange={(val) => handleInput('employeeNumber', val)}
+                            >
+                                {Object.entries(employeeNumberObj).map(item =>
+                                    <Option required value={item[1]}>{item[0]}</Option>
+                                )}
+                            </Select>
+
+                            <Input
+                                name="email"
+                                label="Email"
+                                type="email"
+                                size="lg"
+                                required
+                                onChange={(e) => handleInput(e.target.name, e.target.value)}
+                            />
+
+                            <Input
+                                name="emailConfirm"
+                                label="Confirm Email"
+                                type="email"
+                                size="lg"
+                                required
+                                onChange={(e) => handleInput(e.target.name, e.target.value)}
+                            />
+
+                            <Typography variant="small" className="text-secondary">
+                                {emailConfirmErrorMessage}
+                            </Typography>
+
+                            <Input
+                                name="password"
+                                label="Password"
+                                type={showPassword ? `text` : `password`}
+                                size="lg"
+                                required
+                                onChange={(e) => handleInput(e.target.name, e.target.value)}
+                                icon={
+                                    showPassword ?
+                                        <EyeSlashIcon className="cursor-pointer" onMouseUp={() => setShowPassword(false)} onMouseLeave={() => setShowPassword(false)} /> :
+                                        <EyeIcon className="cursor-pointer" onMouseDown={() => setShowPassword(true)} onMouseLeave={() => setShowPassword(false)} />
+                                }
+                            />
+
+                            <Input
+                                name="passwordConfirm"
+                                label="Confirm Password"
+                                type={showPassword ? `text` : `password`}
+                                size="lg"
+                                required
+                                onChange={(e) => handleInput(e.target.name, e.target.value)}
+                            />
+
+                            <Typography variant="small" className="text-secondary">
+                                {passwordConfirmErrorMessage}
+                            </Typography>
+
+                        </CardBody>
+                        <CardFooter className="pt-0">
+                            <Button fullWidth className="bg-primary" type="submit">
+                                Sign Up
+                            </Button>
+                            <Typography variant="small" className="mt-6 flex justify-center">
+                                Already have an account?
+                                <Typography
+                                    variant="small"
+                                    color="blue-gray"
+                                    className="ml-1 font-bold cursor-pointer"
+                                    onClick={() => navigate('/login')}
+                                >
+                                    Sign In
+                                </Typography>
+                            </Typography>
+                            <YDivider />
+                            <div className="flex justify-center w-full justify-center my-3">
+                                <i className=" ml-6 cursor-pointer fa-brands fa-google"></i>
+                                <i className=" ml-6 cursor-pointer fa-brands fa-x-twitter"></i>
+                                <i className=" ml-6 cursor-pointer fa-brands fa-linkedin-in"></i>
+                                <i className=" ml-6 cursor-pointer fa-brands fa-apple"></i>
+                            </div>
+                        </CardFooter>
+                    </form>
                 </Card>
             </div>
         </div>

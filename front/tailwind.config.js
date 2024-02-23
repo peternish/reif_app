@@ -6,7 +6,8 @@ module.exports = withMT({
     extend: {
       colors: {
         'header': '#41BA6E',
-        'primary': '#4bca78'
+        'primary': '#4bca78',
+        'secondary': '#ed1c24'
       },
       width: {
         'container': '70%',
