@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors')
 const bodyParser = require('body-parser')
 require('dotenv').config({ path: '.env.local' })
+const router = require('./router/index')
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -15,10 +16,11 @@ app.use(function (req, res, next) {
     next();
 });
 
+
 require('./dbcon/dbcon')
 
-app.use('/auth', router)
-app.use('/api', router)
+app.use('/', router)
+// app.use('/api', router)
 
 const PORT = process.env.PORT
 

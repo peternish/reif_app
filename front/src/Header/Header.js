@@ -9,9 +9,12 @@ import {
     Avatar,
     MenuList,
     MenuItem,
+    Drawer,
 } from "@material-tailwind/react";
-import { ArrowDownCircleIcon, ArrowUpCircleIcon, ChevronDownIcon, LifebuoyIcon, PowerIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { ArrowDownCircleIcon, ArrowUpCircleIcon, Bars3BottomLeftIcon, Bars3Icon, Bars4Icon, ChevronDownIcon, LifebuoyIcon, PowerIcon, UserCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
+import SideMenu from "../SideMenu/SideMenu";
+import YDivider from "../ComponentUtils/YDivider";
 
 const profileMenuItems = [
     {
@@ -89,6 +92,10 @@ function ProfileMenu() {
 }
 
 export default function Header() {
+    const [open, setOpen] = React.useState(false);
+
+    const openDrawer = () => setOpen(true);
+    const closeDrawer = () => setOpen(false);
     const [openNav, setOpenNav] = useState(false);
     const navigate = useNavigate()
 
@@ -104,16 +111,27 @@ export default function Header() {
             <Navbar className="sticky top-0 z-10 h-full max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4 bg-opacity-100 bg-header border-none">
                 <div className="flex items-center justify-between text-white">
                     <Typography
-                        className="mr-4 cursor-pointer py-1.5 text-[1.5rem]"
+                        className="mr-4 cursor-pointer py-1.5 text-[1.5rem] hidden md:block"
                         onClick={() => navigate('/')}
                     >
                         REI Financials
                     </Typography>
+                    <Bars3Icon className="mr-4 cursor-pointer py-1.5 w-6 md:hidden" onClick={openDrawer} />
                     <div className="flex items-center gap-4">
                         <ProfileMenu />
                     </div>
                 </div>
             </Navbar>
+
+            <Drawer open={open} onClose={closeDrawer} className="bg-primary">
+                <div className="flex justify-between items-center text-white bg-header">
+                    <h1 className="text-[1.5rem] m-4">REI Financials</h1>
+                    <XMarkIcon className="mr-4 cursor-pointer py-1.5 w-6" onClick={closeDrawer} />
+                </div>
+                <SideMenu
+                    closeDrawer={closeDrawer}
+                />
+            </Drawer>
         </div>
     );
 }

@@ -3,10 +3,17 @@ import { EyeDropperIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid
 import React, { useEffect, useState } from "react";
 import YDivider from "../ComponentUtils/YDivider";
 import { useNavigate } from "react-router-dom";
+import Axios from "../helper/axiosApi";
+import useErrorHandler from "../helper/handleError";
+import AlertMessage from "../ComponentUtils/AlertMessage";
+import { useSelector } from "react-redux";
 
 export default function Signup() {
 
     const navigate = useNavigate()
+    const handleError = useErrorHandler()
+
+    const showAlert = useSelector(state => state.status.alert.show)
 
     const employeeNumberObj = {
         'Only Me': 1,
@@ -26,6 +33,7 @@ export default function Signup() {
         emailConfirm: '',
         password: '',
         passwordConfirm: '',
+        phoneNumber: ''
     })
 
     const [emailConfirmErrorMessage, setEmailConfirmErrorMessage] = useState('')
@@ -41,7 +49,15 @@ export default function Signup() {
 
     const signup = async (e) => {
         e.preventDefault();
-
+        try {
+            const res = await Axios().post(`/auth/signup`, userData)
+            const authToken = res.data.authToken
+            localStorage.setItem('authToken', authToken)
+            navigate('/')
+        } catch (err) {
+            console.log(err)
+            handleError(err)
+        }
     }
 
     useEffect(() => {
@@ -61,6 +77,9 @@ export default function Signup() {
 
     return (
         <div className="w-screen h-screen grid grid-cols-3">
+            {showAlert &&
+                <AlertMessage />
+            }
             <div className="col-span-3 md:col-span-2 bg-no-repeat bg-center bg-contain flex flex-col justify-center bg-primary p-3 text-center">
                 <div className="w-full md:h-[40%] flex flex-col justify-center items-center py-6 text-white ">
                     <h1 className="text-[3rem]">
@@ -158,6 +177,15 @@ export default function Signup() {
                             <Typography variant="small" className="text-secondary">
                                 {passwordConfirmErrorMessage}
                             </Typography>
+
+                            <Input
+                                name="phoneNumber"
+                                label="Phone Number"
+                                type="tel"
+                                size="lg"
+                                required
+                                onChange={(e) => handleInput(e.target.name, e.target.value)}
+                            />
 
                         </CardBody>
                         <CardFooter className="pt-0">

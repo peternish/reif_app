@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Card,
     CardHeader,
@@ -11,10 +11,40 @@ import {
 } from "@material-tailwind/react";
 import YDivider from "../ComponentUtils/YDivider";
 import { useNavigate } from "react-router-dom";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import Axios from "../helper/axiosApi";
+import useErrorHandler from "../helper/handleError";
 
 export default function Login() {
 
     const navigate = useNavigate()
+    const handleError = useErrorHandler()
+
+    const [userData, setUserData] = useState({
+        email: '',
+        password: ''
+    })
+    const [showPassword, setShowPassword] = useState(false)
+
+    const handleInput = (name, value) => {
+        setUserData({
+            ...userData,
+            [name]: value
+        })
+    }
+
+    const signin = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await Axios().post(`/auth/signin`, userData)
+            const authToken = res.data.authToken
+            localStorage.setItem('authToken', authToken)
+            navigate('/')
+        } catch (err) {
+            console.log(err)
+            handleError(err)
+        }
+    }
 
     return (
         <div className="w-screen h-screen grid grid-cols-3">
@@ -38,42 +68,66 @@ export default function Login() {
             </div>
             <div className="col-span-3 md:col-span-1 flex items-center justify-center">
                 <Card className="w-96 shadow-none">
-                    <CardBody className="flex flex-col gap-4">
-                        <Typography variant="h3" className="my-3">
-                            Sign In
-                        </Typography>
-                        <Input label="Email" type="email" size="lg" />
-                        <Input label="Password" type="password" size="lg" />
-                        <div className="cursor-pointer font-bold">
-                            Forgot Password?
-                        </div>
-                        <div className="-ml-2.5">
-                            <Checkbox label="Remember Me" />
-                        </div>
-                    </CardBody>
-                    <CardFooter className="pt-0">
-                        <Button fullWidth className="bg-primary" onClick={() => navigate('/')}>
-                            Sign In
-                        </Button>
-                        <Typography variant="small" className="mt-6 flex justify-center">
-                            Don&apos;t have an account?
-                            <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="ml-1 font-bold cursor-pointer"
-                                onClick={() => navigate('/signup')}
-                            >
-                                Sign up
+                    <form onSubmit={(e) => signin(e)}>
+                        <CardBody className="flex flex-col gap-4">
+                            <Typography variant="h3" className="my-3">
+                                Sign In
                             </Typography>
-                        </Typography>
-                        <YDivider />
-                        <div className="flex justify-center w-full justify-center my-3">
-                            <i className=" ml-6 cursor-pointer fa-brands fa-google"></i>
-                            <i className=" ml-6 cursor-pointer fa-brands fa-x-twitter"></i>
-                            <i className=" ml-6 cursor-pointer fa-brands fa-linkedin-in"></i>
-                            <i className=" ml-6 cursor-pointer fa-brands fa-apple"></i>
-                        </div>
-                    </CardFooter>
+
+                            <Input
+                                name="email"
+                                label="Email"
+                                type="email"
+                                size="lg"
+                                required
+                                onChange={(e) => handleInput(e.target.name, e.target.value)}
+                            />
+
+                            <Input
+                                name="password"
+                                label="Password"
+                                type={showPassword ? `text` : `password`}
+                                size="lg"
+                                required
+                                onChange={(e) => handleInput(e.target.name, e.target.value)}
+                                icon={
+                                    showPassword ?
+                                        <EyeSlashIcon className="cursor-pointer" onMouseUp={() => setShowPassword(false)} onMouseLeave={() => setShowPassword(false)} /> :
+                                        <EyeIcon className="cursor-pointer" onMouseDown={() => setShowPassword(true)} onMouseLeave={() => setShowPassword(false)} />
+                                }
+                            />
+
+                            <div className="cursor-pointer font-bold">
+                                Forgot Password?
+                            </div>
+                            {/* <div className="-ml-2.5">
+                                <Checkbox label="Remember Me" />
+                            </div> */}
+                        </CardBody>
+                        <CardFooter className="pt-0">
+                            <Button type="submit" fullWidth className="bg-primary">
+                                Sign In
+                            </Button>
+                            <Typography variant="small" className="mt-6 flex justify-center">
+                                Don&apos;t have an account?
+                                <Typography
+                                    variant="small"
+                                    color="blue-gray"
+                                    className="ml-1 font-bold cursor-pointer"
+                                    onClick={() => navigate('/signup')}
+                                >
+                                    Sign up
+                                </Typography>
+                            </Typography>
+                            <YDivider />
+                            <div className="flex justify-center w-full justify-center my-3">
+                                <i className=" ml-6 cursor-pointer fa-brands fa-google"></i>
+                                <i className=" ml-6 cursor-pointer fa-brands fa-x-twitter"></i>
+                                <i className=" ml-6 cursor-pointer fa-brands fa-linkedin-in"></i>
+                                <i className=" ml-6 cursor-pointer fa-brands fa-apple"></i>
+                            </div>
+                        </CardFooter>
+                    </form>
                 </Card>
             </div>
         </div>

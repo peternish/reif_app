@@ -14,20 +14,25 @@ import {
 import { useNavigate } from "react-router-dom";
 import YDivider from "../ComponentUtils/YDivider";
 
-export default function SideMenu() {
-
+export default function SideMenu(props) {
     const navigate = useNavigate();
 
     return (
         <div className="h-full p-4 bg-primary text-white">
             <List>
-                <ListItem onClick={() => { navigate('/') }}>
+                <ListItem onClick={() => {
+                    navigate('/')
+                    props.closeDrawer && props.closeDrawer()
+                }}>
                     <ListItemPrefix>
                         <PresentationChartBarIcon className="h-5 w-5" />
                     </ListItemPrefix>
                     Dashboard
                 </ListItem>
-                <ListItem onClick={() => { navigate('/setup') }} >
+                <ListItem onClick={() => {
+                    navigate('/setup')
+                    props.closeDrawer && props.closeDrawer()
+                }} >
                     <ListItemPrefix>
                         <PencilIcon className="h-5 w-5" />
                     </ListItemPrefix>

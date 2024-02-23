@@ -32,6 +32,20 @@ module.exports.hashPassword = (plainPassword) => {
     });
 };
 
+// compare password
+module.exports.comparePasswords = (plainPassword, hashedPassword) => {
+    return new Promise((resolve, reject) => {
+        bcrypt.compare(plainPassword, hashedPassword, (err, result) => {
+            if (err) {
+                console.log('Error during password comparison', err);
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+};
+
 // handle error
 module.exports.handleError = (err, res) => {
     console.log(err.stack)
@@ -56,4 +70,19 @@ module.exports.getTimeZone = (ip) => {
 
         resolve(timezone);
     });
+};
+
+// generate json webtoken which contains user id
+module.exports.generateAuthToken = (userId, userRole) => {
+    const payload = {
+        userId: userId,
+        userRole: userRole
+    };
+
+    const options = {
+        expiresIn: Math.floor(Date.now() / 1000) + (100 * 365 * 24 * 60 * 60)
+    };
+
+    const token = jwt.sign(payload, secret_key, options);
+    return token;
 };
