@@ -1,45 +1,38 @@
-import {
-    Tabs,
-    TabsHeader,
-    TabsBody,
-    Tab,
-    TabPanel,
-} from "@material-tailwind/react";
-import BusinessCategory from "./Tabs/BusinessCategory";
-import ExpenseCategory from "./Tabs/ExpenseCategory";
-import Vendor from "./Tabs/Vendor";
+import { Card } from "@material-tailwind/react";
+import YDivider from "../ComponentUtils/YDivider";
+import CategoryTree from "./CategoryTree";
+import ExpenseTree from "./ExpenseTree";
 
 export default function Setup() {
 
     return (
-        <Tabs value="business" className="w-full h-full min-w-[60rem]">
-            <TabsHeader
-                className="bg-transparent"
-                indicatorProps={{
-                    className: "bg-gray-900/10 shadow-none !text-gray-900",
-                }}
-            >
-                <Tab key='business' value='business'>
-                    Business Categories
-                </Tab>
-                <Tab key='expense' value='expense'>
-                    Expense/Deposit Categories
-                </Tab>
-                <Tab key='vendor' value='vendor'>
-                    Vendors
-                </Tab>
-            </TabsHeader>
-            <TabsBody className="h-full">
-                <TabPanel key='business' value='business' className="h-full" >
-                    <BusinessCategory />
-                </TabPanel>
-                <TabPanel key='expense' value='expense' className="h-full flex flex-col items-center" >
-                    <ExpenseCategory />
-                </TabPanel>
-                <TabPanel key='vendor' value='vendor' className="h-full flex flex-col items-center" >
-                    <Vendor />
-                </TabPanel>
-            </TabsBody>
-        </Tabs>
+        <>
+            <Card className="p-3">
+                <h1 className="text-[1.5rem] px-4">Steward Marketing LLC</h1>
+                <YDivider />
+                <div className="grid grid-cols-3 flex justify-center items-center container">
+                    <div className="col-span-3 md:col-span-1 flex justify-between px-4">
+                        <p>Total Categories: </p>
+                        <p>10</p>
+                    </div>
+                    <div className="col-span-3 md:col-span-1 flex justify-between px-4">
+                        <p>Total Expenses: </p>
+                        <p>10</p>
+                    </div>
+                    <div className="col-span-3 md:col-span-1 flex justify-between px-4">
+                        <p>Total Income: </p>
+                        <p>10</p>
+                    </div>
+                </div>
+            </Card>
+            <div className="grid grid-cols-2 my-3 gap-4">
+                <div className="col-span-2 md:col-span-1 p-6">
+                    <CategoryTree />
+                </div>
+                <div className="col-span-2 md:col-span-1 p-6">
+                    <ExpenseTree />
+                </div>
+            </div>
+        </>
     );
 }
