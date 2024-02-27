@@ -35,6 +35,7 @@ function ProfileMenu() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const closeMenu = () => setIsMenuOpen(false);
+    const navigate = useNavigate()
 
     return (
         <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -42,7 +43,7 @@ function ProfileMenu() {
                 <Button
                     variant="text"
                     color="white"
-                    className="flex items-center gap-1 rounded-full py-1 px-2 pl-0.5 lg:ml-auto"
+                    className="flex items-center gap-1 rounded-full py-1 px-2 pl-0.5 md:ml-auto"
                 >
                     <Avatar
                         variant="circular"
@@ -80,6 +81,7 @@ function ProfileMenu() {
                                 variant="small"
                                 className="font-normal"
                                 color={isLastItem ? "red" : "inherit"}
+                                onClick={() => navigate('/login')}
                             >
                                 {label}
                             </Typography>
@@ -108,7 +110,7 @@ export default function Header() {
 
     return (
         <div className="min-w-screen min-h-16 max-h-16">
-            <Navbar className="sticky top-0 z-10 h-full max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4 bg-opacity-100 bg-header border-none">
+            <Navbar className="sticky top-0 z-10 h-full max-w-full rounded-none px-4 py-2 md:px-8 md:py-4 bg-opacity-100 bg-header border-none">
                 <div className="flex items-center justify-between text-white">
                     <Typography
                         className="mr-4 cursor-pointer py-1.5 text-[1.5rem] hidden md:block"

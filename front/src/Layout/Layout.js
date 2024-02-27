@@ -8,10 +8,10 @@ export default function Layout() {
         <>
             <Header />
             <div className="grid grid-cols-12 bg-gray-100 items-baseline h-[calc(100vh-4rem)]">
-                <div className="h-full col-span-2 sticky top-0 hidden lg:block">
+                <div className="h-full col-span-2 sticky top-0 hidden md:block">
                     <SideMenu />
                 </div>
-                <div className='col-span-12 max-h-full lg:col-span-10 p-6 h-full overflow-x-auto'>
+                <div className='col-span-12 max-h-full md:col-span-10 p-6 h-full overflow-x-auto'>
                     <Outlet />
                 </div>
             </div>

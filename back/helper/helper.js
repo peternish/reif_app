@@ -86,3 +86,20 @@ module.exports.generateAuthToken = (userId, userRole) => {
     const token = jwt.sign(payload, secret_key, options);
     return token;
 };
+
+// get current node
+module.exports.getCurrentNode = (nodeIdArr, categoryData) => {
+    let currentNode = categoryData;
+    for (let nodeId of nodeIdArr.slice(1)) {
+        currentNode = currentNode['children'][nodeId];
+    }
+    return currentNode;
+}
+// get parent node
+module.exports.getParentNode = (nodeIdArr, categoryData) => {
+    let currentNode = categoryData;
+    for (let nodeId of nodeIdArr.slice(1, nodeIdArr.length - 1)) {
+        currentNode = currentNode['children'][nodeId];
+    }
+    return currentNode;
+}

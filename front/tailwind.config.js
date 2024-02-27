@@ -13,6 +13,11 @@ module.exports = withMT({
       width: {
         'container': '70%',
       },
+      screens: {
+        'sm': '500px',
+        "md": '1200px',
+        'lg': '1500px'
+      },
     },
   },
   plugins: [],

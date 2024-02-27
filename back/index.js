@@ -3,7 +3,11 @@ const app = express();
 const cors = require('cors')
 const bodyParser = require('body-parser')
 require('dotenv').config({ path: '.env.local' })
-const router = require('./router/index')
+
+const authRouter = require('./router/auth')
+const apiRouter = require('./router/api')
+
+const { authCheck } = require('./middleware.js/middleware');
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -19,8 +23,8 @@ app.use(function (req, res, next) {
 
 require('./dbcon/dbcon')
 
-app.use('/', router)
-// app.use('/api', router)
+app.use('/auth', authRouter)
+app.use('/api', authCheck, apiRouter)
 
 const PORT = process.env.PORT
 

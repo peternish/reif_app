@@ -7,7 +7,8 @@ const StatusSlice = createSlice({
             show: false,
             type: null,
             message: null,
-        }
+        },
+        pageUpdate: false
     },
     reducers: {
         setAlert: (state, action) => {
@@ -15,10 +16,16 @@ const StatusSlice = createSlice({
             state.alert.show = show;
             state.alert.type = type;
             state.alert.message = message;
+        },
+        setPageUpdate: (state) => {
+            state.pageUpdate = !state.pageUpdate
         }
     }
 });
 
-export const { setAlert } = StatusSlice.actions;
+export const {
+    setAlert,
+    setPageUpdate
+} = StatusSlice.actions;
 
 export default StatusSlice.reducer;

@@ -106,10 +106,10 @@ module.exports.signin = async (req, res) => {
             WHERE email = ?
         `
         let q_update_user_last_login = `
-        UPDATE users
-        SET last_login = ?
-        WHERE email = ?
-    `
+            UPDATE users
+            SET last_login = ?
+            WHERE email = ?
+        `
 
         let retrievedUserData = await executeQuery(
             q_get_user,

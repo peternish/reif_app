@@ -94,8 +94,8 @@ export default function ExpenseTree() {
             <Card className='bg-secondary w-full text-white flex justify-center items-center p-3 text-[1.5rem]'>
                 <h1>Set Up Expense/Income</h1>
             </Card>
-            <div className='grid grid-cols-2 w-full gap-4'>
-                <Box className='w-full col-span-2 md:col-span-1 my-2'>
+            <div className='flex flex-col w-full gap-4'>
+                <Box className='w-full my-2'>
                     <div className='flex justify-between'>
                         <h1 className='text-[1.5rem]'>Expenses</h1>
                         <AddButton />
@@ -115,9 +115,9 @@ export default function ExpenseTree() {
                         </StyledTreeItem>
                     </TreeView>
                 </Box>
-                <Box className='w-full col-span-2 md:col-span-1 my-2'>
+                <Box className='w-full my-2'>
                     <div className='flex justify-between'>
-                        <h1 className='text-[1.5rem]'>Categories</h1>
+                        <h1 className='text-[1.5rem]'>Income</h1>
                         <AddButton />
                     </div>
                     <YDivider />

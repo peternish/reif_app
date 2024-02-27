@@ -147,7 +147,7 @@ export default function Signup() {
                                 onChange={(e) => handleInput(e.target.name, e.target.value)}
                             />
 
-                            <Typography variant="small" className="text-secondary">
+                            <Typography variant="small" className="text-tertiary">
                                 {emailConfirmErrorMessage}
                             </Typography>
 
@@ -174,7 +174,7 @@ export default function Signup() {
                                 onChange={(e) => handleInput(e.target.name, e.target.value)}
                             />
 
-                            <Typography variant="small" className="text-secondary">
+                            <Typography variant="small" className="text-tertiary">
                                 {passwordConfirmErrorMessage}
                             </Typography>
 

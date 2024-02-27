@@ -25,11 +25,11 @@ export default function Setup() {
                     </div>
                 </div>
             </Card>
-            <div className="grid grid-cols-2 my-3 gap-4">
-                <div className="col-span-2 md:col-span-1 p-6">
+            <div className="grid grid-cols-5 my-3 gap-4">
+                <div className="col-span-5 md:col-span-3 p-6">
                     <CategoryTree />
                 </div>
-                <div className="col-span-2 md:col-span-1 p-6">
+                <div className="col-span-5 md:col-span-2 p-6">
                     <ExpenseTree />
                 </div>
             </div>
