@@ -81,6 +81,7 @@ export default function CategoryTree() {
                     setShowModal={setShowConfirmModal}
                     handlePageUpdate={handlePageUpdate}
                     nodeId={nodeId}
+                    type='category'
                 />
             }
             <div className='flex flex-col items-center'>

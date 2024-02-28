@@ -5,7 +5,9 @@ const {
     deleteBusinessCategory,
     getBusinessCategory,
     addExpenseCategory,
-    getExpenseCategory
+    getExpenseCategory,
+    editExpenseCategory,
+    deleteExpenseCategory
 } = require('../controller/setup')
 const router = express.Router()
 
@@ -17,6 +19,8 @@ router.get('/businessCategory', getBusinessCategory)
 
 // set up expenses
 router.post('/expenseCategory', addExpenseCategory)
+router.put('/expenseCategory', editExpenseCategory)
+router.delete('/expenseCategory', deleteExpenseCategory)
 router.get('/expenseCategory', getExpenseCategory)
 
 module.exports = router

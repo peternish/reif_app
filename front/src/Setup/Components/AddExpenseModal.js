@@ -9,6 +9,8 @@ export default function AddExpenseModal({
     handlePageUpdate,
     categoryNodeId,
     expenseNodeId,
+    expenseNodeLabel,
+    type,
     modalType
 }) {
     const handleError = useErrorHandler()
@@ -16,8 +18,7 @@ export default function AddExpenseModal({
     const handleOpen = () => {
         setShowModal(false)
     }
-
-    const [expenseName, setExpenseName] = useState('')
+    const [expenseName, setExpenseName] = useState(modalType == 'Edit' ? expenseNodeLabel : '')
 
     const handleClick = async () => {
         try {
@@ -25,12 +26,21 @@ export default function AddExpenseModal({
                 window.alert('fill out.')
             }
             else {
-                Axios().post('/api/expenseCategory', {
-                    name: expenseName,
-                    type: modalType,
-                    categoryNodeId: categoryNodeId,
-                    parent: expenseNodeId
-                })
+                if (modalType == 'Add') {
+                    Axios().post('/api/expenseCategory', {
+                        name: expenseName,
+                        type: type,
+                        categoryNodeId: categoryNodeId,
+                        parent: expenseNodeId
+                    })
+                }
+                else {
+                    Axios().put('/api/expenseCategory', {
+                        name: expenseName,
+                        categoryNodeId: categoryNodeId,
+                        expenseNodeId: expenseNodeId
+                    })
+                }
                 handleOpen()
                 handlePageUpdate()
             }
@@ -51,6 +61,7 @@ export default function AddExpenseModal({
                     type="text"
                     label={`Input ${modalType}`}
                     size="lg"
+                    value={expenseName}
                     onChange={(e) => setExpenseName(e.target.value)}
                 />
             </DialogBody>
@@ -59,7 +70,7 @@ export default function AddExpenseModal({
                     className="bg-primary"
                     onClick={() => handleClick()}
                 >
-                    Add {modalType}
+                    {modalType} {type}
                 </Button>
             </DialogFooter>
         </Dialog>

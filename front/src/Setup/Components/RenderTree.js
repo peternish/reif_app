@@ -40,7 +40,10 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
                                 e.stopPropagation();
                                 console.log('Edit clicked for', label);
                                 if (type == 'category') {
-                                    props.handleClickEdit(nodeId)
+                                    props.handleClickEdit(nodeId, label)
+                                }
+                                else {
+                                    props.handleClickEdit(nodeId, type, label)
                                 }
                             }}
                         />
@@ -50,6 +53,9 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
                                 e.stopPropagation();
                                 console.log('Delete clicked for', label);
                                 if (type == 'category') {
+                                    props.handleClickDelete(nodeId)
+                                }
+                                else {
                                     props.handleClickDelete(nodeId)
                                 }
                             }}

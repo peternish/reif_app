@@ -7,6 +7,7 @@ export default function ConfirmModal({
     showModal,
     setShowModal,
     handlePageUpdate,
+    type,
     nodeId,
 }) {
     const handleError = useErrorHandler()
@@ -17,7 +18,12 @@ export default function ConfirmModal({
 
     const handleClick = async () => {
         try {
-            await Axios().delete(`/api/businessCategory?nodeId=${nodeId}`)
+            if (type == 'category') {
+                await Axios().delete(`/api/businessCategory?nodeId=${nodeId}`)
+            }
+            else {
+                await Axios().delete(`/api/expenseCategory?nodeId=${nodeId}`)
+            }
             handleOpen()
             handlePageUpdate()
         } catch (err) {

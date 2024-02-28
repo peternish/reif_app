@@ -5,11 +5,12 @@ import { MinusCircleIcon, PlusCircleIcon, XMarkIcon } from '@heroicons/react/24/
 import { Card } from '@material-tailwind/react';
 import YDivider from '../ComponentUtils/YDivider';
 import AddButton from './Components/AddButton';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AddExpenseModal from './Components/AddExpenseModal';
 import Axios from '../helper/axiosApi';
 import useErrorHandler from '../helper/handleError';
 import RenderTree from './Components/RenderTree';
+import ConfirmModal from './Components/ConfirmModal';
 
 export default function ExpenseTree() {
 
@@ -17,9 +18,12 @@ export default function ExpenseTree() {
 
     const categoryNodeId = useSelector(state => state.status.categoryNodeId)
     const categoryNodeLabel = useSelector(state => state.status.categoryNodeLabel)
+    const [type, setType] = useState('')
     const [modalType, setModalType] = useState('')
     const [expenseNodeId, setExpenseNodeId] = useState('0')
+    const [expenseNodeLabel, setExpenseNodeLabel] = useState('')
     const [showExpenseModal, setShowExpenseModal] = useState(false)
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
 
     const [expenseData, setExpenseData] = useState([])
     const [incomeData, setIncomeData] = useState([])
@@ -31,19 +35,35 @@ export default function ExpenseTree() {
     }
 
     const handleExpenseClick = () => {
-        setModalType('Expense')
+        setType('Expense')
+        setModalType('Add')
         setShowExpenseModal(true)
     }
 
     const handleIncomeClick = () => {
-        setModalType('Income')
+        setType('Income')
+        setModalType('Add')
         setShowExpenseModal(true)
     }
 
     const handleClickAdd = (nodeId, type) => {
         setExpenseNodeId(nodeId)
-        setModalType(type)
+        setType(type)
+        setModalType('Add')
         setShowExpenseModal(true)
+    }
+
+    const handleClickEdit = (nodeId, type, nodeLabel) => {
+        setExpenseNodeId(nodeId)
+        setExpenseNodeLabel(nodeLabel)
+        setType(type)
+        setModalType('Edit')
+        setShowExpenseModal(true)
+    }
+
+    const handleClickDelete = (nodeId) => {
+        setExpenseNodeId(nodeId)
+        setShowConfirmModal(true)
     }
 
     const fetchExpenses = async () => {
@@ -70,7 +90,19 @@ export default function ExpenseTree() {
                     handlePageUpdate={handlePageUpdate}
                     categoryNodeId={categoryNodeId}
                     expenseNodeId={expenseNodeId}
+                    expenseNodeLabel={expenseNodeLabel}
+                    type={type}
                     modalType={modalType}
+                />
+            }
+            {
+                showConfirmModal &&
+                <ConfirmModal
+                    showModal={showConfirmModal}
+                    setShowModal={setShowConfirmModal}
+                    handlePageUpdate={handlePageUpdate}
+                    nodeId={expenseNodeId}
+                    type='expense'
                 />
             }
             <div className='flex flex-col items-center'>
@@ -99,8 +131,8 @@ export default function ExpenseTree() {
                                             category={expense}
                                             type='expense'
                                             handleClickAdd={handleClickAdd}
-                                        // handleClickEdit={handleClickEdit}
-                                        // handleClickDelete={handleClickDelete}
+                                            handleClickEdit={handleClickEdit}
+                                            handleClickDelete={handleClickDelete}
                                         />
                                     )
                                 })
@@ -128,8 +160,8 @@ export default function ExpenseTree() {
                                             category={income}
                                             type='income'
                                             handleClickAdd={handleClickAdd}
-                                        // handleClickEdit={handleClickEdit}
-                                        // handleClickDelete={handleClickDelete}
+                                            handleClickEdit={handleClickEdit}
+                                            handleClickDelete={handleClickDelete}
                                         />
                                     )
                                 })
