@@ -29,6 +29,9 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
                                 if (type == 'category') {
                                     props.handleClickAdd(nodeId)
                                 }
+                                else {
+                                    props.handleClickAdd(nodeId, type)
+                                }
                             }}
                         />
                         <i

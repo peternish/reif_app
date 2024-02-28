@@ -9,7 +9,8 @@ const StatusSlice = createSlice({
             message: null,
         },
         categoryNodeId: '0',
-        categoryNodeLabel: ''
+        categoryNodeLabel: '',
+        expenseNodeId: '0'
     },
     reducers: {
         setAlert: (state, action) => {
@@ -23,6 +24,9 @@ const StatusSlice = createSlice({
         },
         setCategoryNodeLabel: (state, action) => {
             state.categoryNodeLabel = action.payload
+        },
+        setExpenseNodeId: (state, action) => {
+            state.expenseNodeId = action.payload
         }
     }
 });
@@ -30,7 +34,8 @@ const StatusSlice = createSlice({
 export const {
     setAlert,
     setCategoryNodeId,
-    setCategoryNodeLabel
+    setCategoryNodeLabel,
+    setExpenseNodeId
 } = StatusSlice.actions;
 
 export default StatusSlice.reducer;

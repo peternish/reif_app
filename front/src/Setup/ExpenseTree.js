@@ -16,8 +16,9 @@ export default function ExpenseTree() {
     const handleError = useErrorHandler()
 
     const categoryNodeId = useSelector(state => state.status.categoryNodeId)
-    const nodeLabel = useSelector(state => state.status.categoryNodeLabel)
+    const categoryNodeLabel = useSelector(state => state.status.categoryNodeLabel)
     const [modalType, setModalType] = useState('')
+    const [expenseNodeId, setExpenseNodeId] = useState('0')
     const [showExpenseModal, setShowExpenseModal] = useState(false)
 
     const [expenseData, setExpenseData] = useState([])
@@ -36,6 +37,12 @@ export default function ExpenseTree() {
 
     const handleIncomeClick = () => {
         setModalType('Income')
+        setShowExpenseModal(true)
+    }
+
+    const handleClickAdd = (nodeId, type) => {
+        setExpenseNodeId(nodeId)
+        setModalType(type)
         setShowExpenseModal(true)
     }
 
@@ -62,12 +69,13 @@ export default function ExpenseTree() {
                     setShowModal={setShowExpenseModal}
                     handlePageUpdate={handlePageUpdate}
                     categoryNodeId={categoryNodeId}
+                    expenseNodeId={expenseNodeId}
                     modalType={modalType}
                 />
             }
             <div className='flex flex-col items-center'>
                 <Card className='bg-secondary w-full text-white flex justify-center items-center p-3 text-[1.5rem]'>
-                    <h1>Ex/In: {nodeLabel}</h1>
+                    <h1>Ex/In: {categoryNodeLabel}</h1>
                 </Card>
                 <div className='flex flex-col w-full gap-4'>
                     <Box className='w-full my-2'>
@@ -90,7 +98,7 @@ export default function ExpenseTree() {
                                         <RenderTree
                                             category={expense}
                                             type='expense'
-                                        // handleClickAdd={handleClickAdd}
+                                            handleClickAdd={handleClickAdd}
                                         // handleClickEdit={handleClickEdit}
                                         // handleClickDelete={handleClickDelete}
                                         />
@@ -119,7 +127,7 @@ export default function ExpenseTree() {
                                         <RenderTree
                                             category={income}
                                             type='income'
-                                        // handleClickAdd={handleClickAdd}
+                                            handleClickAdd={handleClickAdd}
                                         // handleClickEdit={handleClickEdit}
                                         // handleClickDelete={handleClickDelete}
                                         />

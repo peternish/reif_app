@@ -8,6 +8,7 @@ export default function AddExpenseModal({
     setShowModal,
     handlePageUpdate,
     categoryNodeId,
+    expenseNodeId,
     modalType
 }) {
     const handleError = useErrorHandler()
@@ -28,7 +29,7 @@ export default function AddExpenseModal({
                     name: expenseName,
                     type: modalType,
                     categoryNodeId: categoryNodeId,
-                    parent: 0
+                    parent: expenseNodeId
                 })
                 handleOpen()
                 handlePageUpdate()

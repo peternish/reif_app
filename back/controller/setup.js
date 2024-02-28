@@ -1,15 +1,25 @@
 const { handleError, executeQuery, getCurrentNode, getChildrenOfCurrentNode } = require("../helper/helper")
 
-var q_get_category_with_node_id = `
-                SELECT children
-                FROM business_categories
-                WHERE id = ?
-            `
+var q_get_business_category_with_node_id = `
+    SELECT children
+    FROM business_categories
+    WHERE id = ?
+`
+var q_get_expense_category_with_node_id = `
+    SELECT children
+    FROM expense_categories
+    WHERE id = ?
+`
 var q_update_category = `
-                UPDATE business_categories
-                SET children = ?
-                WHERE id = ?
-            `
+    UPDATE business_categories
+    SET children = ?
+    WHERE id = ?
+`
+var q_update_expense_category = `
+    UPDATE expense_categories
+    SET children = ?
+    WHERE id = ?
+`
 
 module.exports.addBusinessCategory = async (req, res) => {
     try {
@@ -33,7 +43,7 @@ module.exports.addBusinessCategory = async (req, res) => {
         else { // create sub category
             var nodeIdArr = parent.split('-');
             var retreivedCategory = await executeQuery(
-                q_get_category_with_node_id,
+                q_get_business_category_with_node_id,
                 [nodeIdArr[0]]
             )
             var childrenData = JSON.parse(retreivedCategory[0].children);
@@ -88,7 +98,7 @@ module.exports.editBusinessCategory = async (req, res) => {
         }
         else { // change the name of sub category
             var retreivedCategory = await executeQuery(
-                q_get_category_with_node_id,
+                q_get_business_category_with_node_id,
                 [id]
             )
             var childrenData = JSON.parse(retreivedCategory[0].children);
@@ -123,7 +133,7 @@ module.exports.deleteBusinessCategory = async (req, res) => {
         }
         else {  // in case of sub category
             var retreivedCategory = await executeQuery(
-                q_get_category_with_node_id,
+                q_get_business_category_with_node_id,
                 [id]
             );
             var childrenData = JSON.parse(retreivedCategory[0].children);
@@ -186,6 +196,38 @@ module.exports.addExpenseCategory = async (req, res) => {
             await executeQuery(
                 q_insert_expense,
                 [userId, categoryNodeId, name, type, `[]`]
+            )
+        }
+        else {
+            var nodeIdArr = parent.split('-')
+            var retreivedCategory = await executeQuery(
+                q_get_expense_category_with_node_id,
+                [nodeIdArr[0]]
+            )
+            var childrenData = JSON.parse(retreivedCategory[0].children);
+            if (nodeIdArr.slice(1) == []) { // which means the parent is the root node - main business category.
+                let idOfLastNode = childrenData[0] ? childrenData[childrenData.length - 1]['id'] : '0'
+                let idToBeAdded = parseInt(idOfLastNode[idOfLastNode.length - 1]) + 1
+                childrenData.push({
+                    id: `${retreivedCategory[0].id}-${idToBeAdded}`,
+                    name: name,
+                    children: []
+                })
+            }
+            else { // parent node is not the main category
+                let chidrenOfCurrentNode = getChildrenOfCurrentNode(nodeIdArr, childrenData);
+                let idOfLastNode = chidrenOfCurrentNode[0] ? chidrenOfCurrentNode[chidrenOfCurrentNode.length - 1]['id'] : '0'
+                let idToBeAdded = parseInt(idOfLastNode[idOfLastNode.length - 1]) + 1
+                chidrenOfCurrentNode = chidrenOfCurrentNode.push({
+                    id: parent + `-${idToBeAdded}`,
+                    name: name,
+                    children: []
+                });
+            }
+            childrenData = JSON.stringify(childrenData)
+            await executeQuery(
+                q_update_expense_category,
+                [childrenData, nodeIdArr[0]]
             )
         }
         res.status(200).json({})
