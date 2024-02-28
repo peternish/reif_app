@@ -1,52 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { alpha, styled } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
+import { setCategoryNodeId, setCategoryNodeLabel } from '../../store/StatusSlice';
 
 const CustomTreeItem = React.forwardRef((props, ref) => {
-    const { label, nodeId, children, ...other } = props;
+    const dispatch = useDispatch()
+    const { label, nodeId, children, type, ...other } = props;
 
     return (
-        <TreeItem nodeId={nodeId} label={(
-            <div className='flex items-center justify-between w-full py-1 border-b-2 border-gray-300'>
-                <div>{label}</div>
-                <div className='flex items-center'>
-                    <i
-                        className="fa-regular fa-square-plus text-primary text-xl ml-4"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            console.log('Add clicked for', label);
-                            props.handleClickAdd(nodeId)
-                        }}
-                    />
-                    <i
-                        className='fa-regular fa-edit text-secondary text-xl ml-4'
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            console.log('Edit clicked for', label);
-                            props.handleClickEdit(nodeId, label)
-                        }}
-                    />
-                    <i class="fa-regular fa-trash-can text-tertiary text-xl ml-4"
-                        className='fa-regular fa-trash-can text-tertiary text-xl ml-4'
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            console.log('Delete clicked for', label);
-                            props.handleClickDelete(nodeId)
-                        }}
-                    />
-                    {/* <div
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            console.log('Delete clicked for', label);
-                        }}
-                        size="small"
-                        className='ml-2 text-tertiary underline'
-                    >
-                        Delete
-                    </div> */}
+        <TreeItem
+            onClick={() => {
+                if (type == 'category') {
+                    dispatch(setCategoryNodeId(nodeId))
+                    dispatch(setCategoryNodeLabel(label))
+                }
+            }}
+            nodeId={nodeId}
+            label={(
+                <div className='flex items-center justify-between w-full py-1 border-b-2 border-gray-300'>
+                    <div>{label}</div>
+                    <div className='flex items-center'>
+                        <i
+                            className="fa-regular fa-square-plus text-primary text-xl ml-4"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                console.log('Add clicked for', label);
+                                if (type == 'category') {
+                                    props.handleClickAdd(nodeId)
+                                }
+                            }}
+                        />
+                        <i
+                            className='fa-regular fa-edit text-secondary text-xl ml-4'
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                console.log('Edit clicked for', label);
+                                if (type == 'category') {
+                                    props.handleClickEdit(nodeId)
+                                }
+                            }}
+                        />
+                        <i class="fa-regular fa-trash-can text-tertiary text-xl ml-4"
+                            className='fa-regular fa-trash-can text-tertiary text-xl ml-4'
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                console.log('Delete clicked for', label);
+                                if (type == 'category') {
+                                    props.handleClickDelete(nodeId)
+                                }
+                            }}
+                        />
+                    </div>
                 </div>
-            </div>
-        )} ref={ref} {...other}>
+            )} ref={ref} {...other}>
             {children}
         </TreeItem>
     );
@@ -69,27 +76,35 @@ const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
 
 export default function RenderTree({
     category,
+    type,
     handleClickAdd,
     handleClickEdit,
     handleClickDelete
 }) {
+    let children
+    if (typeof category.children == 'string') {
+        children = JSON.parse(category.children);
+    }
+    else {
+        children = category.children
+    }
     if (!category) return null; // Add a check for category existence
-
-    const data = category.data ? JSON.parse(category.data) : category;
 
     return (
         <StyledTreeItem
-            key={data.id ? data.id : category.id}
-            nodeId={data.id ? `${data.id}` : `${category.id}`}
-            label={data.name ? data.name : category.name}
+            key={category.id}
+            nodeId={`${category.id}`}
+            label={category.name}
+            type={type}
             handleClickAdd={handleClickAdd}
             handleClickEdit={handleClickEdit}
             handleClickDelete={handleClickDelete}
         >
-            {data.children && data.children.length > 0 && data.children.map((node) => (
+            {children && children.length > 0 && children.map((node) => (
                 <RenderTree
                     key={node.id}
                     category={node}
+                    type={type}
                     handleClickAdd={handleClickAdd}
                     handleClickEdit={handleClickEdit}
                     handleClickDelete={handleClickDelete}

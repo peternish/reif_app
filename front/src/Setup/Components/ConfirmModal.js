@@ -17,7 +17,7 @@ export default function ConfirmModal({
 
     const handleClick = async () => {
         try {
-            await Axios().delete(`/api/businessCategory/?nodeId=${nodeId}`)
+            await Axios().delete(`/api/businessCategory?nodeId=${nodeId}`)
             handleOpen()
             handlePageUpdate()
         } catch (err) {

@@ -8,7 +8,8 @@ const StatusSlice = createSlice({
             type: null,
             message: null,
         },
-        pageUpdate: false
+        categoryNodeId: '0',
+        categoryNodeLabel: ''
     },
     reducers: {
         setAlert: (state, action) => {
@@ -17,15 +18,19 @@ const StatusSlice = createSlice({
             state.alert.type = type;
             state.alert.message = message;
         },
-        setPageUpdate: (state) => {
-            state.pageUpdate = !state.pageUpdate
+        setCategoryNodeId: (state, action) => {
+            state.categoryNodeId = action.payload
+        },
+        setCategoryNodeLabel: (state, action) => {
+            state.categoryNodeLabel = action.payload
         }
     }
 });
 
 export const {
     setAlert,
-    setPageUpdate
+    setCategoryNodeId,
+    setCategoryNodeLabel
 } = StatusSlice.actions;
 
 export default StatusSlice.reducer;

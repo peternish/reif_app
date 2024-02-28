@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { TreeView } from '@mui/x-tree-view/TreeView';
-import { ArrowRightIcon, ChartBarSquareIcon, MinusCircleIcon, PlusCircleIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { Card } from '@material-tailwind/react';
 import YDivider from '../ComponentUtils/YDivider';
 import AddButton from './Components/AddButton';
@@ -9,7 +8,7 @@ import AddCategoryModal from './Components/AddCategoryModal';
 import { useDispatch, useSelector } from 'react-redux';
 import useErrorHandler from '../helper/handleError';
 import Axios from '../helper/axiosApi';
-import { setPageUpdate } from '../store/StatusSlice';
+import { setCategoryNodeId, setCategoryNodeLabel } from '../store/StatusSlice';
 import RenderTree from './Components/RenderTree';
 import ConfirmModal from './Components/ConfirmModal';
 
@@ -18,10 +17,10 @@ export default function CategoryTree() {
     const dispatch = useDispatch()
     const handleError = useErrorHandler()
 
-    const pageUpdate = useSelector(state => state.status.pageUpdate)
+    const [pageUpdate, setPageUpdate] = useState(false)
 
-    const [nodeLabel, setNodeLabel] = useState('')
-    const [nodeId, setNodeId] = useState('0')
+    const nodeLabel = useSelector(state => state.status.categoryNodeLabel)
+    const nodeId = useSelector(state => state.status.categoryNodeId)
     const [modalType, setModalType] = useState('Add')
     const [showAddCategoryModal, setShowAddCategoryModal] = useState(false)
     const [showConfirmModal, setShowConfirmModal] = useState(false)
@@ -29,30 +28,31 @@ export default function CategoryTree() {
     const [categories, setCategories] = useState([])
 
     const handleClickAdd = (nodeId) => {
-        setNodeId(nodeId)
+        dispatch(setCategoryNodeId(nodeId))
         setModalType('Add')
         setShowAddCategoryModal(true);
     }
 
     const handleClickEdit = (nodeId, nodeLabel) => {
-        setNodeId(nodeId)
-        setNodeLabel(nodeLabel)
+        dispatch(setCategoryNodeId(nodeId))
+        dispatch(setCategoryNodeLabel(nodeLabel))
         setModalType('Edit')
         setShowAddCategoryModal(true)
     }
 
     const handleClickDelete = (nodeId) => {
-        setNodeId(nodeId)
+        dispatch(setCategoryNodeId(nodeId))
         setShowConfirmModal(true)
     }
 
     const handlePageUpdate = () => {
-        dispatch(setPageUpdate())
+        setPageUpdate(!pageUpdate)
     }
 
     const fetchCategories = async () => {
         try {
             const res = await Axios().get('/api/businessCategory')
+            console.log(res.data)
             setCategories(res.data)
         } catch (err) {
             handleError(err)
@@ -97,15 +97,16 @@ export default function CategoryTree() {
                     <YDivider />
                     <TreeView
                         aria-label="file system navigator"
-                        // defaultEndIcon={<ArrowRightIcon className='text-secondary' />}
-                        defaultCollapseIcon={<MinusCircleIcon className='text-secondary' />}
-                        defaultExpandIcon={<PlusCircleIcon className='text-secondary' />}
+                        defaultEndIcon={<i className="fa-solid fa-circle text-secondary opacity-80"></i>}
+                        defaultCollapseIcon={<i class="fa-solid fa-circle-minus text-secondary"></i>}
+                        defaultExpandIcon={<i class="fa-solid fa-circle-plus text-secondary"></i>}
                     >
                         {
                             categories.map((category) => {
                                 return (
                                     <RenderTree
                                         category={category}
+                                        type='category'
                                         handleClickAdd={handleClickAdd}
                                         handleClickEdit={handleClickEdit}
                                         handleClickDelete={handleClickDelete}

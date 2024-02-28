@@ -87,19 +87,18 @@ module.exports.generateAuthToken = (userId, userRole) => {
     return token;
 };
 
-// get current node
-module.exports.getCurrentNode = (nodeIdArr, categoryData) => {
-    let currentNode = categoryData;
+// get chidlren of current node
+module.exports.getChildrenOfCurrentNode = (nodeIdArr, childrenData) => {
+    let children = childrenData;
     for (let nodeId of nodeIdArr.slice(1)) {
-        currentNode = currentNode['children'][nodeId];
+        children = children.filter(node => node.id[node.id.length - 1] == nodeId)[0]['children'];
     }
-    return currentNode;
+    return children;
 }
-// get parent node
-module.exports.getParentNode = (nodeIdArr, categoryData) => {
-    let currentNode = categoryData;
-    for (let nodeId of nodeIdArr.slice(1, nodeIdArr.length - 1)) {
-        currentNode = currentNode['children'][nodeId];
-    }
-    return currentNode;
+
+// get current node
+module.exports.getCurrentNode = (nodeIdArr, childrenData) => {
+    let childrenOfParentNode = this.getChildrenOfCurrentNode(nodeIdArr.slice(0, nodeIdArr.length - 1), childrenData);
+    let currentNode = childrenOfParentNode.filter(node => node.id[node.id.length - 1] == nodeIdArr[nodeIdArr.length - 1])[0]
+    return currentNode
 }
