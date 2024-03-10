@@ -81,7 +81,7 @@ function ProfileMenu() {
                                 variant="small"
                                 className="font-normal"
                                 color={isLastItem ? "red" : "inherit"}
-                                onClick={() => navigate('/login')}
+                                onClick={() => {navigate('/login'); localStorage.removeItem("authToken")}}
                             >
                                 {label}
                             </Typography>

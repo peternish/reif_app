@@ -18,10 +18,10 @@ export default function SideMenu(props) {
     const navigate = useNavigate();
 
     return (
-        <div className="h-full p-4 bg-primary text-white">
+        <div className="h-full p-10 bg-primary text-white">
             <List>
                 <ListItem onClick={() => {
-                    navigate('/')
+                    navigate('/dashboard')
                     props.closeDrawer && props.closeDrawer()
                 }}>
                     <ListItemPrefix>

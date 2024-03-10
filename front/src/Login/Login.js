@@ -39,7 +39,7 @@ export default function Login() {
             const res = await Axios().post(`/auth/signin`, userData)
             const authToken = res.data.authToken
             localStorage.setItem('authToken', authToken)
-            navigate('/')
+            navigate('/dashboard')
         } catch (err) {
             console.log(err)
             handleError(err)
