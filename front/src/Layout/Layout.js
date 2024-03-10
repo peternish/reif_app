@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../Header/Header';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import SideMenu from '../SideMenu/SideMenu';
 
 export default function Layout() {
+    const navigate = useNavigate()
+    useEffect(() => {
+        const authToken = localStorage.getItem('authToken')
+        if (!authToken) {
+            navigate('/login')
+        }
+    }, [])
     return (
         <>
             <Header />
