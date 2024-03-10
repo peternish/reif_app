@@ -65,12 +65,18 @@ export default function AddExpenseModal({
                     onChange={(e) => setExpenseName(e.target.value)}
                 />
             </DialogBody>
-            <DialogFooter className="flex justify-end">
+            <DialogFooter className="flex justify-between">
                 <Button
                     className="bg-primary"
                     onClick={() => handleClick()}
                 >
                     {modalType} {type}
+                </Button>
+                <Button
+                    className="bg-primary"
+                    onClick={() => setShowModal(false)}
+                >
+                    Cancel
                 </Button>
             </DialogFooter>
         </Dialog>

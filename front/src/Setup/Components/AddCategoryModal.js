@@ -61,12 +61,18 @@ export default function AddCategoryModal({
                     onChange={(e) => setCategoryName(e.target.value)}
                 />
             </DialogBody>
-            <DialogFooter className="flex justify-end">
+            <DialogFooter className="flex justify-between">
                 <Button
                     className="bg-primary"
                     onClick={() => handleClick()}
                 >
                     {modalType}
+                </Button>
+                <Button
+                    className="bg-primary"
+                    onClick={() => setShowModal(false)}
+                >
+                    Cancel
                 </Button>
             </DialogFooter>
         </Dialog>

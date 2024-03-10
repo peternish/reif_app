@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import {React, useEffect} from 'react';
 import Header from '../Header/Header';
 import { Outlet, useNavigate } from 'react-router-dom';
 import SideMenu from '../SideMenu/SideMenu';
@@ -11,6 +11,7 @@ export default function Layout() {
             navigate('/login')
         }
     }, [])
+
     return (
         <>
             <Header />
