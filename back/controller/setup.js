@@ -98,7 +98,7 @@ module.exports.editBusinessCategory = async (req, res) => {
         }
         else { // change the name of sub category
             var retreivedCategory = await executeQuery(
-                q_get_expense_category_with_node_id,
+                q_get_business_category_with_node_id,
                 [id]
             )
             var childrenData = JSON.parse(retreivedCategory[0].children);

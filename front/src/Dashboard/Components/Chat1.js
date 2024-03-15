@@ -14,6 +14,7 @@ import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
  
 export default function Chart1(props) {
     const title = props.title;
+    const squareColor = (title === "Deposite") ? "bg-primary" : "bg-secondary";
     const data = props.detailData;
     const chartConfig = {
         type: "line",
@@ -53,7 +54,7 @@ export default function Chart1(props) {
             },
             labels: {
               style: {
-                colors: "green",
+                colors: {squareColor},
                 fontSize: "12px",
                 fontFamily: "inherit",
                 fontWeight: 400,
@@ -74,7 +75,7 @@ export default function Chart1(props) {
           yaxis: {
             labels: {
               style: {
-                colors: "blue",
+                colors: {squareColor},
                 fontSize: "12px",
                 fontFamily: "inherit",
                 fontWeight: 400,
@@ -114,7 +115,7 @@ export default function Chart1(props) {
         color="transparent"
         className="flex flex-col gap-4 rounded-none md:flex-row md:items-center"
       >
-        <div className="w-max rounded-lg bg-primary p-5 text-white">
+        <div className={`w-max rounded-lg ${squareColor} p-5 text-white`}>
           <Square3Stack3DIcon className="h-6 w-6" />
         </div>
         <div>

@@ -114,7 +114,7 @@ export default function Header() {
                 <div className="flex items-center justify-between text-white">
                     <Typography
                         className="mr-4 cursor-pointer py-1.5 text-[1.5rem] hidden md:block"
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate('/dashboard')}
                     >
                         REI Financials
                     </Typography>

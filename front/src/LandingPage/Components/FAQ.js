@@ -3,6 +3,7 @@ import {
   Accordion,
   AccordionHeader,
   AccordionBody,
+  Typography,
 } from "@material-tailwind/react";
  
 function Icon({ id, open }) {
@@ -28,9 +29,9 @@ export function FAQ() {
   return (
     <>
       <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
-        <AccordionHeader className="text-3xl" onClick={() => handleOpen(1)}>What is Real Estate Investor Financials?</AccordionHeader>
+        <AccordionHeader className="text-3xl text-primary" onClick={() => handleOpen(1)}>What is Real Estate Investor Financials?</AccordionHeader>
         <AccordionBody className="text-xl">
-            Real Estate Investor Financials is an advanced financial management platform specifically designed
+            <span className="text-primary text-xl">Real </span><span className="text-secondary text-xl">Estate </span><span className="text-tertiary text-xl">Investor </span><span className="text-black text-xl">Financials </span> is an advanced financial management platform specifically designed
             for real estate
             investors. It streamlines financial operations, optimizes investment tracking, and enhances
             profitability in real estate
@@ -38,11 +39,11 @@ export function FAQ() {
         </AccordionBody>
       </Accordion>
       <Accordion open={open === 2} icon={<Icon id={2} open={open} />}>
-        <AccordionHeader className="text-3xl" onClick={() => handleOpen(2)}>
+        <AccordionHeader className="text-3xl text-secondary" onClick={() => handleOpen(2)}>
             How does Real Estate Investor Financials work?
         </AccordionHeader>
         <AccordionBody className="text-xl">
-            Real Estate Investor Financials automates various financial tasks such as property income tracking,
+        <span className="text-primary text-xl">Real </span><span className="text-secondary text-xl">Estate </span><span className="text-tertiary text-xl">Investor </span><span className="text-black text-xl">Financials </span> automates various financial tasks such as property income tracking,
             expense management,
             portfolio analysis, and tax reporting. It integrates seamlessly with your real estate investment
             accounts and banking
@@ -50,11 +51,11 @@ export function FAQ() {
         </AccordionBody>
       </Accordion>
       <Accordion open={open === 3} icon={<Icon id={3} open={open} />}>
-        <AccordionHeader className="text-3xl" onClick={() => handleOpen(3)}>
+        <AccordionHeader className="text-3xl text-tertiary" onClick={() => handleOpen(3)}>
             How can Real Estate Investor Financials benefit my real estate investment business?
         </AccordionHeader>
         <AccordionBody className="text-xl">
-            Real Estate Investor Financials helps save time, minimize errors, improve decision-making, and
+        <span className="text-primary text-xl">Real </span><span className="text-secondary text-xl">Estate </span><span className="text-tertiary text-xl">Investor </span><span className="text-black text-xl">Financials </span> helps save time, minimize errors, improve decision-making, and
             maximize returns on real
             estate investments. By automating financial processes, investors can focus more on strategic
             planning and portfolio
@@ -62,11 +63,11 @@ export function FAQ() {
         </AccordionBody>
       </Accordion>
       <Accordion open={open === 4} icon={<Icon id={4} open={open} />}>
-        <AccordionHeader className="text-3xl" onClick={() => handleOpen(4)}>
+        <AccordionHeader className="text-3xl text-primary" onClick={() => handleOpen(4)}>
             Is Real Estate Investor Financials suitable for investors of all levels?
         </AccordionHeader>
         <AccordionBody className="text-xl">
-            Yes, Real Estate Investor Financials caters to investors of all experience levels, from novice
+            Yes, <span className="text-primary text-xl">Real </span><span className="text-secondary text-xl">Estate </span><span className="text-tertiary text-xl">Investor </span><span className="text-black text-xl">Financials </span> caters to investors of all experience levels, from novice
             investors to seasoned
             professionals. Its user-friendly interface and customizable features make it suitable for managing
             portfolios of any size and complexity.

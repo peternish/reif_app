@@ -32,13 +32,16 @@ export default function SideMenu(props) {
                 <ListItem onClick={() => {
                     navigate('/setup')
                     props.closeDrawer && props.closeDrawer()
-                }} >
+                }}>
                     <ListItemPrefix>
                         <PencilIcon className="h-5 w-5" />
                     </ListItemPrefix>
                     Set Up
                 </ListItem>
-                <ListItem>
+                <ListItem onClick={() => {
+                    navigate('/process');
+                    props.closeDrawer && props.closeDrawer()
+                }}>
                     <ListItemPrefix>
                         <BanknotesIcon className="h-5 w-5" />
                     </ListItemPrefix>

@@ -9,6 +9,7 @@ import Setup from "./Setup/Setup";
 import Login from "./Login/Login";
 import Signup from "./Login/Signup";
 import LandingPage from "./LandingPage/LandingPage";
+import Process from "./Process/Process";
 import { Provider } from "react-redux";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             >
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/setup" element={<Setup />} />
+              <Route path="/process" element={<Process />} />
             </Route>
           </Routes>
         </BrowserRouter>
