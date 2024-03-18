@@ -11,7 +11,8 @@ const {
 } = require('../controller/setup')
 
 const {
-    addIncomeData, editIncomeData, deleteIncomeData, getIncomeData, getAllIncomeData
+    addIncomeData, editIncomeData, deleteIncomeData, getIncomeData, getAllIncomeData,
+    addExpenseData, editExpenseData, deleteExpenseData, getExpenseData, getAllExpenseData
 } = require('../controller/process')
 
 const router = express.Router()
@@ -36,9 +37,10 @@ router.get('/allIncomeData', getAllIncomeData)
 router.get('/incomeData', getIncomeData)
 
 // process expense
-router.post('/businessCategory', addBusinessCategory)
-router.put('/businessCategory', editBusinessCategory)
-router.delete('/businessCategory', deleteBusinessCategory)
-router.get('/businessCategory', getBusinessCategory)
+router.post('/expenseData', addExpenseData)
+router.put('/expenseData', editExpenseData)
+router.delete('/expenseData', deleteExpenseData)
+router.get('/allExpenseData', getAllExpenseData)
+router.get('/expenseData', getExpenseData)
 
 module.exports = router
