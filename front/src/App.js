@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@material-tailwind/react";
+import { ThemeProvider as MuiTheme } from "@mui/material";
 import '@fortawesome/fontawesome-free/css/all.css';
 import { store } from "./store/store";
 import { theme } from "./constants/theme";
@@ -9,12 +10,14 @@ import Setup from "./Setup/Setup";
 import Login from "./Login/Login";
 import Signup from "./Login/Signup";
 import LandingPage from "./LandingPage/LandingPage";
+import Process from "./Process/Process";
 import { Provider } from "react-redux";
 
 function App() {
   return (
     <Provider store={store}>
       <ThemeProvider value={theme}>
+        {/* <MuiTheme> */}
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -26,9 +29,11 @@ function App() {
             >
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/setup" element={<Setup />} />
+              <Route path="/process" element={<Process />} />
             </Route>
           </Routes>
         </BrowserRouter>
+        {/* </MuiTheme> */}
       </ThemeProvider>
     </Provider>
   );

@@ -33,7 +33,7 @@ export default function Landing() {
                     Welcome to our cutting-edge sales and expense management automation platform, 
                     designed to streamline your business operations and optimize financial processes with ease and efficiency. 
                     </p>
-                    <button className={"bg-primary text-3xl text-white active:bg-gray-100  uppercase px-5 py-5 rounded-full shadow-xl border-white hover:shadow-md outline-none focus:outline-none mt-10"}
+                    <button className={"bg-primary text-3xl text-white active:bg-gray-100 font-bold uppercase px-5 py-5 rounded-full shadow-xl border-white hover:shadow-md outline-none focus:outline-none mt-10"}
                     type="button"
                     style={{ transition: "all .15s ease" }} onClick={() => { navigate('/dashboard') }}>
                     Get Started
@@ -72,7 +72,7 @@ export default function Landing() {
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-20 h-20 mb-5 shadow-lg rounded-full bg-tertiary">
                       <i className="fas fa-award"></i>
                     </div>
-                    <h6 className="text-2xl font-semibold">Business Structure Management</h6>
+                    <h6 className="text-2xl font-bold text-tertiary">Business Structure Management</h6>
                     <p className="mt-2 mb-4 text-gray-600">
                       You can build your business structure using pre-built platform.
                     </p>
@@ -86,7 +86,7 @@ export default function Landing() {
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-20 h-20 mb-5 shadow-lg rounded-full bg-secondary">
                       <i className="fas fa-retweet"></i>
                     </div>
-                    <h6 className="text-2xl font-semibold">
+                    <h6 className="text-2xl font-bold text-secondary">
                       Expense / Deposite Management
                     </h6>
                     <p className="mt-2 mb-4 text-gray-600">
@@ -102,7 +102,7 @@ export default function Landing() {
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-20 h-20 mb-5 shadow-lg rounded-full bg-primary">
                       <i className="fas fa-fingerprint"></i>
                     </div>
-                    <h6 className="text-2xl font-semibold">
+                    <h6 className="text-2xl font-bold text-primary">
                       Import / Export Spreadsheet
                     </h6>
                     <p className="mt-2 mb-4 text-gray-600">
@@ -116,7 +116,7 @@ export default function Landing() {
 
             <div className="flex flex-wrap items-center mt-20 mb-20">
               <div className="w-full md:w-5/12 px-4 mr-auto ml-auto">
-                <h3 className="text-5xl mb-2 font-semibold leading-normal">
+                <h3 className="text-5xl mb-2 font-bold leading-normal text-secondary">
                   About REIF
                 </h3>
                 <p className="text-2xl font-light leading-relaxed mt-4 mb-4 text-gray-700">
@@ -169,7 +169,7 @@ export default function Landing() {
           <div className="container mx-auto px-4 mb-8">
             <div className="items-center flex flex-wrap">
               <div className="w-full md:w-4/12 ml-auto px-1">
-                <div class="content px-xl-5">
+                <div className="content px-xl-5">
                   <h1 className="text-secondary text-5xl mb-2 font-semibold leading-normal">Frequently Asked <strong>Questions</strong></h1>
                   <p className="text-2xl font-light leading-relaxed mt-4 mb-4 text-gray-700">
                     Explore the answers to common inquiries about Real Estate Investor Financials.
@@ -189,7 +189,7 @@ export default function Landing() {
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap justify-center text-center mb-24">
               <div className="w-full lg:w-6/12 px-4">
-                <h2 className="text-4xl font-semibold">
+                <h2 className="text-5xl font-bold text-tertiary">
                   What do people say about us?
                 </h2>
                 <p className="text-lg leading-relaxed m-4 text-gray-600">
@@ -316,7 +316,7 @@ export default function Landing() {
           <div className="container mx-auto px-4 lg:pt-24 lg:pb-32">
             <div className="flex flex-wrap text-center justify-center">
               <div className="w-full lg:w-6/12 px-4">
-                <h2 className="text-4xl font-semibold text-white">
+                <h2 className="text-5xl font-bold text-white">
                   Build something
                 </h2>
                 <p className="text-lg leading-relaxed mt-4 mb-4 text-gray-500">
@@ -423,7 +423,7 @@ export default function Landing() {
                     </div>
                     <div className="text-center mt-6">
                       <button
-                        className="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                        className="bg-secondary text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                         type="button"
                         style={{ transition: "all .15s ease" }}
                       >
