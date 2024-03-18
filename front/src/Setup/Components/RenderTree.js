@@ -6,7 +6,7 @@ import { setCategoryNodeId, setCategoryNodeLabel } from '../../store/StatusSlice
 
 const CustomTreeItem = React.forwardRef((props, ref) => {
     const dispatch = useDispatch()
-    const { label, nodeId, children, type, ...other } = props;
+    const { label, nodeId, children, type, handleClickAdd, handleClickEdit, handleClickDelete, ...other } = props;
 
     return (
         <TreeItem
@@ -27,10 +27,10 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
                                 e.stopPropagation();
                                 console.log('Add clicked for', label);
                                 if (type == 'category') {
-                                    props.handleClickAdd(nodeId)
+                                    handleClickAdd(nodeId)
                                 }
                                 else {
-                                    props.handleClickAdd(nodeId, type)
+                                    handleClickAdd(nodeId, type)
                                 }
                             }}
                         />
@@ -40,23 +40,22 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
                                 e.stopPropagation();
                                 console.log('Edit clicked for', label);
                                 if (type == 'category') {
-                                    props.handleClickEdit(nodeId, label)
+                                    handleClickEdit(nodeId, label)
                                 }
                                 else {
-                                    props.handleClickEdit(nodeId, type, label)
+                                    handleClickEdit(nodeId, type, label)
                                 }
                             }}
                         />
-                        <i class="fa-regular fa-trash-can text-tertiary text-xl ml-4"
-                            className='fa-regular fa-trash-can text-tertiary text-xl ml-4'
+                        <i className='fa-regular fa-trash-can text-tertiary text-xl ml-4'
                             onClick={(e) => {
                                 e.stopPropagation();
                                 console.log('Delete clicked for', label);
                                 if (type == 'category') {
-                                    props.handleClickDelete(nodeId)
+                                    handleClickDelete(nodeId)
                                 }
                                 else {
-                                    props.handleClickDelete(nodeId)
+                                    handleClickDelete(nodeId)
                                 }
                             }}
                         />

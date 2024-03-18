@@ -36,7 +36,7 @@ export default function Login() {
     const signin = async (e) => {
         e.preventDefault();
         try {
-            const res = await Axios().post(`/auth/signin`, userData)
+            const res = await Axios().post('/auth/signin', userData)
             const authToken = res.data.authToken
             localStorage.setItem('authToken', authToken)
             navigate('/dashboard')

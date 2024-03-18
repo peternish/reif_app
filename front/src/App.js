@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@material-tailwind/react";
+import { ThemeProvider as MuiTheme } from "@mui/material";
 import '@fortawesome/fontawesome-free/css/all.css';
 import { store } from "./store/store";
 import { theme } from "./constants/theme";
@@ -16,6 +17,7 @@ function App() {
   return (
     <Provider store={store}>
       <ThemeProvider value={theme}>
+        {/* <MuiTheme> */}
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -31,6 +33,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        {/* </MuiTheme> */}
       </ThemeProvider>
     </Provider>
   );

@@ -121,8 +121,8 @@ export default function ExpenseTree() {
                         <TreeView
                             aria-label="file system navigator"
                             defaultEndIcon={<i className="fa-solid fa-circle text-secondary opacity-80"></i>}
-                            defaultCollapseIcon={<i class="fa-solid fa-circle-minus text-secondary"></i>}
-                            defaultExpandIcon={<i class="fa-solid fa-circle-plus text-secondary"></i>}
+                            defaultCollapseIcon={<i className="fa-solid fa-circle-minus text-secondary"></i>}
+                            defaultExpandIcon={<i className="fa-solid fa-circle-plus text-secondary"></i>}
                         >
                             {
                                 expenseData.map((expense) => {
@@ -150,8 +150,8 @@ export default function ExpenseTree() {
                         <TreeView
                             aria-label="file system navigator"
                             defaultEndIcon={<i className="fa-solid fa-circle text-secondary opacity-80"></i>}
-                            defaultCollapseIcon={<i class="fa-solid fa-circle-minus text-secondary"></i>}
-                            defaultExpandIcon={<i class="fa-solid fa-circle-plus text-secondary"></i>}
+                            defaultCollapseIcon={<i className="fa-solid fa-circle-minus text-secondary"></i>}
+                            defaultExpandIcon={<i className="fa-solid fa-circle-plus text-secondary"></i>}
                         >
                             {
                                 incomeData.map((income) => {

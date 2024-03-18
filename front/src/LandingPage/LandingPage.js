@@ -169,7 +169,7 @@ export default function Landing() {
           <div className="container mx-auto px-4 mb-8">
             <div className="items-center flex flex-wrap">
               <div className="w-full md:w-4/12 ml-auto px-1">
-                <div class="content px-xl-5">
+                <div className="content px-xl-5">
                   <h1 className="text-secondary text-5xl mb-2 font-semibold leading-normal">Frequently Asked <strong>Questions</strong></h1>
                   <p className="text-2xl font-light leading-relaxed mt-4 mb-4 text-gray-700">
                     Explore the answers to common inquiries about Real Estate Investor Financials.
