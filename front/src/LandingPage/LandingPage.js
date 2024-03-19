@@ -12,7 +12,7 @@ export default function Landing() {
     <>
       <Navbar transparent />
       <main>
-        <div className="relative pt-16 pb-32 flex content-center items-center justify-center"
+        <div className="relative pt-16 pb-16 flex content-center items-center justify-center"
             style={{
               minHeight: "75vh"
             }}>
@@ -26,14 +26,14 @@ export default function Landing() {
               <div className="items-center flex flex-wrap">
                 <div className="w-full lg:w-8/12 px-4 ml-auto mr-auto text-center">
                   <div className="pr-12">
-                    <h1 className="text-white text-8xl font-bold">
-                      WELCOME TO REIF
+                    <h1 className="text-white text-7xl font-bold">
+                      WELCOME TO REI Financials
                     </h1>
                     <p className="mt-4 text-3xl text-white mb-10">
                     Welcome to our cutting-edge sales and expense management automation platform, 
                     designed to streamline your business operations and optimize financial processes with ease and efficiency. 
                     </p>
-                    <button className={"bg-primary text-3xl text-white active:bg-gray-100 font-bold uppercase px-5 py-5 rounded-full shadow-xl border-white hover:shadow-md outline-none focus:outline-none mt-10"}
+                    <button className={"bg-primary text-3xl text-white active:bg-gray-100 font-bold uppercase px-5 py-5 rounded-full shadow-xl border-white hover:shadow-md outline-none focus:outline-none mt-5"}
                     type="button"
                     style={{ transition: "all .15s ease" }} onClick={() => { navigate('/dashboard') }}>
                     Get Started
@@ -87,7 +87,7 @@ export default function Landing() {
                       <i className="fas fa-retweet"></i>
                     </div>
                     <h6 className="text-2xl font-bold text-secondary">
-                      Expense / Deposite Management
+                      Expense / Deposit Management
                     </h6>
                     <p className="mt-2 mb-4 text-gray-600">
                       You can manage your business easily using pre-built platform.
@@ -117,7 +117,7 @@ export default function Landing() {
             <div className="flex flex-wrap items-center mt-20 mb-20">
               <div className="w-full md:w-5/12 px-4 mr-auto ml-auto">
                 <h3 className="text-5xl mb-2 font-bold leading-normal text-secondary">
-                  About REIF
+                  About REI Financials
                 </h3>
                 <p className="text-2xl font-light leading-relaxed mt-4 mb-4 text-gray-700">
                   Real Estate Investor Financials is designed to streamline your business operations

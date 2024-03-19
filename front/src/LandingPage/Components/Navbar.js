@@ -19,11 +19,11 @@ export default function Navbar(props) {
           <a
             className={
               (props.transparent ? "text-white" : "text-gray-800") +
-              " text-5xl font-bold leading-relaxed inline-block mr-4 py-0 whitespace-nowrap uppercase"
+              " text-5xl font-bold leading-relaxed inline-block mr-4 py-0 whitespace-nowrap"
             }
             href="https://www.creative-tim.com/learning-lab/tailwind-starter-kit#/presentation"
           >
-            REIF
+            REI Financials
           </a>
           <button
             className="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"

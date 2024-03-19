@@ -14,7 +14,7 @@ import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
  
 export default function Chart1(props) {
     const title = props.title;
-    const squareColor = (title === "Deposite") ? "bg-primary" : "bg-secondary";
+    const squareColor = (title === "Deposit") ? "bg-primary" : "bg-secondary";
     const data = props.detailData;
     const chartConfig = {
         type: "line",

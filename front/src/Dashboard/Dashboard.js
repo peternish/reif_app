@@ -16,7 +16,7 @@ export default function Dashboard() {
                                         <div className="flex flex-wrap">
                                             <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
                                                 <h5 className="text-primary uppercase font-bold text-xs">
-                                                    Total Deposite
+                                                    Total Deposit
                                                 </h5>
                                                 <span className="font-semibold text-xl text-blueGray-700">
                                                     350,897
@@ -98,7 +98,7 @@ export default function Dashboard() {
             <div className="px-4 md:px-10 mx-auto w-full -m-24">
                 <div className="flex flex-wrap">
                     <div className="w-full xl:w-12/12 mb-12 xl:mb-0 px-4">
-                        <Chart1 title={"Deposite"} detailData={[50, 40, 300, 320, 500, 350, 200, 230, 500]}/>
+                        <Chart1 title={"Deposit"} detailData={[50, 40, 300, 320, 500, 350, 200, 230, 500]}/>
                         <Chart1 title={"Expense"} detailData={[10, 30, 120, 200, 50, 35, 180, 200, 420]}/>
                     </div>
                 </div>

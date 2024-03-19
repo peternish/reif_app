@@ -26,7 +26,7 @@ export default function Footer() {
         <div className="flex flex-wrap">
           <div className="w-full lg:w-6/12 px-4">
             <h4 className="text-4xl font-semibold text-white">
-              REIF
+              REI Financials
             </h4>
             <h5 className="text-lg mt-0 mb-2 text-white">
               Real Estate Investor Financials is designed to streamline your business operations and optimize financial processes with ease and efficiency. 
