@@ -1,4 +1,6 @@
 const express = require('express')
+const fileUpload = require('express-fileupload');
+
 const app = express();
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -13,6 +15,8 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(fileUpload());
+
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', "*")
     res.setHeader("Access-Control-Allow-Headers", "Content-Type,Acess-Control-Allow-Headers,Authorization,X-Requested-With");

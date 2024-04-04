@@ -12,7 +12,9 @@ const {
 
 const {
     addIncomeData, editIncomeData, deleteIncomeData, getIncomeData, getAllIncomeData,
-    addExpenseData, editExpenseData, deleteExpenseData, getExpenseData, getAllExpenseData
+    addExpenseData, editExpenseData, deleteExpenseData, getExpenseData, getAllExpenseData,
+    uploadInvoiceFile,
+    addPrpoertyFromProcess, addIncomeCategoryFromProcess,
 } = require('../controller/process')
 
 const router = express.Router()
@@ -43,4 +45,13 @@ router.delete('/expenseData', deleteExpenseData)
 router.get('/allExpenseData', getAllExpenseData)
 router.get('/expenseData', getExpenseData)
 
+
+//invoice file upload
+router.post('/uploadInvoiceFile', uploadInvoiceFile)
+
+//add property from process
+router.get('/addPropertyFromProcess', addPrpoertyFromProcess)
+
+//add income category from process
+router.get('/addIncomeCategoryFromProcess', addIncomeCategoryFromProcess)
 module.exports = router

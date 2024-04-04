@@ -8,6 +8,9 @@ import {
     PopoverHandler,
     PopoverContent,
 } from "@material-tailwind/react";
+import {
+    PlusIcon
+  } from "@heroicons/react/24/outline";
 import Axios from "../../helper/axiosApi";
 import useErrorHandler from "../../helper/handleError";
 import { useState, useEffect } from "react";
@@ -15,7 +18,9 @@ import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { editingStateInitializer } from "@mui/x-data-grid/internals";
+import { emphasize } from "@mui/material";
  
+var addNewClicked = false;
 
 export function AddIncomeModal({ showModal, setShowModal, modalType, selectedRowId, handlePageUpdate, categoryId }) {
     const handleError = useErrorHandler()
@@ -35,6 +40,9 @@ export function AddIncomeModal({ showModal, setShowModal, modalType, selectedRow
 
     const [properties, setProperties] = useState([])
     const [categories, setCategories] = useState([])
+    // const [newProperty, setNewProperty] = useState([])
+    const newProperty = React.createRef()
+    const newIncomeCategory = React.createRef()
 
     const getProperties = async () => {
         const res = await Axios().get('/api/businessCategory')
@@ -45,27 +53,77 @@ export function AddIncomeModal({ showModal, setShowModal, modalType, selectedRow
     function cleanProperties (rawDatas) {
         let result = []
         for (let rawData of rawDatas) {
-            result.push(rawData)
-            console.log(rawData)
             let children = []
             if (typeof rawData.children == 'string') {
                 children = (JSON.parse(rawData.children))
             }
-            console.log(children)
             if (children.length != 0) {
-                result = result.concat(cleanProperties(children))
+                result = result.concat(children)
             }
         }
+
+        result.push({
+            id: 'addNew',
+            name: 'Add Property'
+        })
         return result;
     }
 
     const getCategories = async () => {
         const res = await Axios().get(`/api/expenseCategory/?businessCategoryId=${propertyId}`)
-        setCategories(res.data.income)
-
-        console.log((res.data.income))
+        let tmpCategories = []
+        tmpCategories = tmpCategories.concat(res.data.income)
+        tmpCategories.push({
+            id: 'addNew',
+            name: 'Add Category'
+        })
+        setCategories(tmpCategories)
     }
 
+    const clickAddProperty = async () => {
+        var newPropertyValue = newProperty.current.value
+        var tmp = properties.filter((val) => {
+            return val['name'] == newPropertyValue
+        });
+        if (tmp.length !== 0) {
+            return;
+        }
+        
+        const res = await Axios().get(`/api/addPropertyFromProcess/?categoryId=${categoryId}&propertyName=${newPropertyValue}`)
+        var newValue = {
+            id: res.data.id,
+            name: newPropertyValue,
+            children: []
+        }
+        var tmpProperties = properties
+        tmpProperties.splice(tmpProperties.length - 1, 0, newValue)
+        console.log(tmpProperties)
+        setProperty(newPropertyValue)
+        setProperties([...tmpProperties])
+        newProperty.current.value = ''
+    }
+
+    const clickAddIncomeCategory = async() => {
+        var newIncomeCategoryValue = newIncomeCategory.current.value
+        if (newIncomeCategoryValue == '') return;
+        var tmp = categories.filter((val) => {
+            return val['name'] == newIncomeCategoryValue
+        })
+        if (tmp.length !== 0) return;
+        if (propertyId == null) return;
+        
+        const res = await Axios().get(`/api/addIncomeCategoryFromProcess/?business_category_id=${propertyId}&name=${newIncomeCategoryValue}&type='income'`)
+        var newValue = {
+            id: res.data.id,
+            name: newIncomeCategoryValue,
+            children: []
+        }
+        var tmpCategories = categories
+        tmpCategories.splice(tmpCategories.length - 1, 0, newValue)
+        setProperty(newIncomeCategoryValue)
+        setCategories([...tmpCategories])
+        newIncomeCategory.current.value = ''
+    }
     const getIncomeData = async () => {
         if (modalType == 'Add') {
             setIncomeDate('')
@@ -113,6 +171,7 @@ export function AddIncomeModal({ showModal, setShowModal, modalType, selectedRow
                 window.alert('fill out.')
             }
             else {
+                console.log(property)
                 if (modalType == 'Add') {
                     Axios().post('/api/incomeData', {
                         property: property,
@@ -167,20 +226,83 @@ export function AddIncomeModal({ showModal, setShowModal, modalType, selectedRow
                 /> */}
                 <div className="grid grid-cols-2 gap-4 mb-4">
                     <div className="">
-                        <Select label="Select Property" value={propertyId} onChange={(val) => {setPropertyId(val);setProperty(properties.filter(p => p.id == val)[0].name)}}>
+                        <Select label="Select Property" value={propertyId} onChange={(val) => {
+                            if (val == 'addNew')
+                            {
+                                return false;
+                            }
+                            setPropertyId(val);
+                            setProperty(properties.filter(c => c.id == val)[0].name);
+                        }}>
                             {properties.map((property) => {
-                                return (
-                                    <Option value={property.id}>{property.name}</Option>
-                                )
+                                if (property.id == 'addNew') {
+                                    return (
+                                        <Option value={property.id} key={property.id}
+                                            onClickCapture={(e) => {
+                                                if (e.target.type == 'button')
+                                                    clickAddProperty()
+                                                e.preventDefault(); 
+                                                e.stopPropagation();}}
+                                        >
+                                            <div className="relative flex w-full">
+                                                {/* <Input
+                                                    value={''}
+                                                    className="pr-20"
+                                                    containerProps={{
+                                                    className: "min-w-0",
+                                                    }}
+                                                />
+                                                <Button
+                                                    size="sm"
+                                                    className="!absolute right-1 top-1 rounded"
+                                                >
+                                                    Add
+                                                </Button> */}
+                                                <div className="flex relative w-full">
+                                                    <Input inputRef={newProperty}/>
+                                                    <Button className="flex items-center bg-primary ml-2" size="sm" onClick={clickAddProperty}>
+                                                        <PlusIcon strokeWidth={2} className="h-5 w-5" /> Add
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </Option>
+                                    )
+                                }
+                                else {
+                                    return (
+                                        <Option value={property.id} key={property.id}>{property.name}</Option>
+                                    )
+                                }
                             })}
                         </Select>
                     </div>
                     <div className="">
                         <Select label="Select Category" value={incomeCategoryId} onChange={(val) => { setIncomeCategoryId(val); setIncomeCategory(categories.filter(c => c.id == val)[0].name) }}>
                             {categories.map((category, index) => {
-                                return (
-                                    <Option value={category.id} key={index}>{category.name}</Option>
-                                )
+                                    if (category.id == 'addNew') {
+                                        return (
+                                            <Option value={category.id} key={category.id}
+                                                onClickCapture={(e) => {
+                                                    if (e.target.type == 'button')
+                                                    clickAddIncomeCategory()
+                                                    e.preventDefault(); 
+                                                    e.stopPropagation();}}
+                                            >
+                                                <div className="relative flex w-full">
+                                                    <div className="flex relative w-full">
+                                                        <Input inputRef={newIncomeCategory}/>
+                                                        <Button className="flex items-center bg-primary ml-2" size="sm" onClick={clickAddIncomeCategory}>
+                                                            <PlusIcon strokeWidth={2} className="h-5 w-5" /> Add
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </Option>
+                                        )
+                                    } else {
+                                        return (
+                                            <Option value={category.id} key={index}>{category.name}</Option>
+                                        )
+                                    }
                             })}
                         </Select>
                     </div>
