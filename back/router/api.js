@@ -7,13 +7,35 @@ const {
     addExpenseCategory,
     getExpenseCategory,
     editExpenseCategory,
-    deleteExpenseCategory
+    deleteExpenseCategory,
+    getAllSettingData,
+    getSettingData,
+    addSettingData,
+    editSettingData,
+    deleteSettingData,
+    getVendor,
+    addVendorCategory,
+    editVendorCategory,
+    deleteVendorCategory,
+    addDescriptionCategory,
+    editDescriptionCategory,
+    deleteDescriptionCategory,
+    getDescriptionCategory,
+    addPMethodCategory,
+    editPMethodCategory,
+    deletePMethodCategory,
+    getPMethodCategory,
+    addPAccountCategory,
+    editPAccountCategory,
+    deletePAccountCategory,
+    getPAccountCategory,
 } = require('../controller/setup')
 
 const {
     addIncomeData, editIncomeData, deleteIncomeData, getIncomeData, getAllIncomeData,
     addExpenseData, editExpenseData, deleteExpenseData, getExpenseData, getAllExpenseData,
     uploadInvoiceFile,
+    addConfig, addSimiliarConfig,
     addPrpoertyFromProcess, addIncomeCategoryFromProcess,
 } = require('../controller/process')
 
@@ -31,6 +53,13 @@ router.put('/expenseCategory', editExpenseCategory)
 router.delete('/expenseCategory', deleteExpenseCategory)
 router.get('/expenseCategory', getExpenseCategory)
 
+//get all setting data
+router.get('/allSettingData', getAllSettingData)
+router.get('/settingData', getSettingData)
+router.post('/settingData', addSettingData)
+router.put('/settingData', editSettingData)
+router.delete('/settingData', deleteSettingData)
+
 // process incomes
 router.post('/incomeData', addIncomeData)
 router.put('/incomeData', editIncomeData)
@@ -46,6 +75,34 @@ router.get('/allExpenseData', getAllExpenseData)
 router.get('/expenseData', getExpenseData)
 
 
+//process Vendor/Worker
+router.get('/getVendor', getVendor)
+router.post('/vendorCategory', addVendorCategory)
+router.put('/vendorCategory', editVendorCategory)
+router.delete('/vendorCategory', deleteVendorCategory)
+
+// process Description
+router.post('/descriptionCategory', addDescriptionCategory)
+router.put('/descriptionCategory', editDescriptionCategory)
+router.delete('/descriptionCategory', deleteDescriptionCategory)
+router.get('/descriptionCategory', getDescriptionCategory)
+
+// process PaymentMethod
+router.post('/pMethodCategory', addPMethodCategory)
+router.put('/pMethodCategory', editPMethodCategory)
+router.delete('/pMethodCategory', deletePMethodCategory)
+router.get('/pMethodCategory', getPMethodCategory)
+
+// process PayFromAccount
+router.post('/pAccountCategory', addPAccountCategory)
+router.put('/pAccountCategory', editPAccountCategory)
+router.delete('/pAccountCategory', deletePAccountCategory)
+router.get('/pAccountCategory', getPAccountCategory)
+
+
+//add config
+router.post('/addConfig', addConfig)
+router.post('/addSimiliarConfig', addSimiliarConfig)
 //invoice file upload
 router.post('/uploadInvoiceFile', uploadInvoiceFile)
 

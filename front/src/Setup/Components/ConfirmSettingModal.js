@@ -3,12 +3,11 @@ import { useState } from "react";
 import Axios from "../../helper/axiosApi";
 import useErrorHandler from "../../helper/handleError";
 
-export default function ConfirmModal({
+export default function ConfirmSettingModal({
     showModal,
     setShowModal,
     handlePageUpdate,
-    type,
-    nodeId,
+    selectedRowId,
 }) {
     const handleError = useErrorHandler()
 
@@ -18,24 +17,7 @@ export default function ConfirmModal({
 
     const handleClick = async () => {
         try {
-            if (type == 'category') {
-                await Axios().delete(`/api/businessCategory?nodeId=${nodeId}`)
-            }
-            else if (type === 'expense') {
-                await Axios().delete(`/api/expenseCategory?nodeId=${nodeId}`)
-            }
-            else if (type == 'vendor') {
-                await Axios().delete(`/api/vendorCategory?nodeId=${nodeId}`)
-            }
-            else if (type == 'description') {
-                await Axios().delete(`/api/descriptionCategory?nodeId=${nodeId}`)
-            }
-            else if (type == 'pMethod') {
-                await Axios().delete(`/api/pMethodCategory?nodeId=${nodeId}`)
-            }
-            else if (type == 'pAccount') {
-                await Axios().delete(`/api/pAccountCategory?nodeId=${nodeId}`)
-            }
+            await Axios().delete(`/api/settingData?id=${selectedRowId}`)
             handleOpen()
             handlePageUpdate()
         } catch (err) {

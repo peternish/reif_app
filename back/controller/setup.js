@@ -352,3 +352,467 @@ module.exports.getExpenseCategory = async (req, res) => {
     }
 }
 
+module.exports.getAllSettingData = async(req, res) => {
+    try {
+        var q_get_all_setting_data = `
+            SELECT id, origin_value as inputValue, category_name as categoryName, category_id as categoryID, type
+            FROM setting
+        `
+        var allData = await executeQuery(
+            q_get_all_setting_data
+        )
+        console.log(allData)
+        res.status(200).json(allData)
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.getSettingData = async(req, res) => {
+    try {
+        var id = req.query.id
+        var q_get_categories = `
+            SELECT id, origin_value as inputValue, category_name as categoryName, category_id as categoryID ,type
+            FROM setting
+            WHERE id = ?
+        `
+        var retreivedCategories = await executeQuery(
+            q_get_categories,
+            [id]
+        )
+        res.status(200).json(retreivedCategories)
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.addSettingData = async(req, res) => {
+    try {
+        var inputValue = req.body.inputValue
+        var type = req.body.type
+        var category_id = req.body.categoryId
+        var category_name = req.body.categoryName
+        var q_insert_category = `
+            INSERT INTO setting
+            (origin_value, type, category_name, category_id)
+            VALUES (?, ?, ?, ?)
+        `
+
+        await executeQuery(
+            q_insert_category,
+            [inputValue, type, category_name, category_id]
+        )       
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.editSettingData = async(req, res) => {
+    try {
+        var id = req.body.id
+        var inputValue = req.body.inputValue
+        var type = req.body.type
+        var category_name = req.body.categoryName
+        var category_id = req.body.categoryId
+
+        var q_update_setting = `
+                UPDATE setting
+                SET origin_value = ?, type = ?, category_name = ?, category_id = ? 
+                WHERE id = ?
+            `
+        await executeQuery(
+            q_update_setting,
+            [inputValue, type, category_name, category_id, id]
+        )
+
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.deleteSettingData = async (req, res) => {
+    try {
+        var id = req.query.id
+            var q_delete_category = `
+                DELETE FROM setting
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_delete_category,
+                [id]
+            )
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err)
+    }
+}
+
+module.exports.getVendor = async (req, res) => {
+    try {
+        var userId = req.userId
+        var businessCategoryId = req.query.businessCategoryId
+        var q_get_vendor_categories = `
+            SELECT id, name
+            FROM vendor_categories
+            WHERE user_id = ? AND business_category_id = ?
+            ORDER BY id
+        `
+        var retreivedVendor = await executeQuery(
+            q_get_vendor_categories,
+            [userId, businessCategoryId]
+        )
+        res.status(200).json({
+            vendor: retreivedVendor
+        })
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.addVendorCategory = async (req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.body.name
+        var type = req.body.type
+        var parent = req.body.parent
+        var categoryNodeId = req.body.categoryNodeId
+
+        if (parent == 0) { // add main expense category
+            var q_insert_vendor = `
+                INSERT INTO vendor_categories
+                (user_id, business_category_id, name)
+                VALUES (?, ?, ?)
+            `
+            await executeQuery(
+                q_insert_vendor,
+                [userId, categoryNodeId, name]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.editVendorCategory = async (req, res) => {
+    try {
+        var nodeId = req.body.vendorNodeId
+        var name = req.body.name
+        var nodeIdArr = nodeId.split('-')
+        var id = nodeIdArr[0]
+        if (nodeIdArr.length == 1) { // change the name of main business category
+            var q_update_vendor_category_name = `
+                UPDATE vendor_categories
+                SET name = ?
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_update_vendor_category_name,
+                [name, id]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.deleteVendorCategory = async (req, res) => {
+    try {
+        console.log(nodeId)
+        var nodeId = req.query.nodeId
+        var nodeIdArr = nodeId.split('-')
+        var id = nodeIdArr[0]
+        if (nodeIdArr.length == 1) { // in case of main category
+            var q_delete_category = `
+                DELETE FROM vendor_categories
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_delete_category,
+                [nodeId]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err)
+    }
+}
+
+module.exports.getDescriptionCategory = async (req, res) => {
+    try {
+        var userId = req.userId
+        var businessCategoryId = req.query.businessCategoryId
+        var q_get_desc_categories = `
+            SELECT id, name
+            FROM description_categories
+            WHERE user_id = ? AND business_category_id = ?
+            ORDER BY id
+        `
+        var retreivedVendor = await executeQuery(
+            q_get_desc_categories,
+            [userId, businessCategoryId]
+        )
+        res.status(200).json({
+            description: retreivedVendor
+        })
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.addDescriptionCategory = async (req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.body.name
+        var type = req.body.type
+        var parent = req.body.parent
+        var categoryNodeId = req.body.categoryNodeId
+
+        if (parent == 0) { // add main desc category
+            var q_insert_desc = `
+                INSERT INTO description_categories
+                (user_id, business_category_id, name)
+                VALUES (?, ?, ?)
+            `
+            await executeQuery(
+                q_insert_desc,
+                [userId, categoryNodeId, name]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.editDescriptionCategory = async (req, res) => {
+    try {
+        var nodeId = req.body.descriptionNodeId
+        var name = req.body.name
+        var nodeIdArr = nodeId.split('-')
+        var id = nodeIdArr[0]
+        if (nodeIdArr.length == 1) { // change the name of main business category
+            var q_update_description_category_name = `
+                UPDATE description_categories
+                SET name = ?
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_update_description_category_name,
+                [name, id]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.deleteDescriptionCategory = async (req, res) => {
+    try {
+        console.log(nodeId)
+        var nodeId = req.query.nodeId
+        var nodeIdArr = nodeId.split('-')
+        var id = nodeIdArr[0]
+        if (nodeIdArr.length == 1) { // in case of main category
+            var q_delete_category = `
+                DELETE FROM description_categories
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_delete_category,
+                [nodeId]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err)
+    }
+}
+
+
+module.exports.getPMethodCategory = async (req, res) => {
+    try {
+        var userId = req.userId
+        var businessCategoryId = req.query.businessCategoryId
+        var q_get_pm_categories = `
+            SELECT id, name
+            FROM payment_method_categories
+            WHERE user_id = ? AND business_category_id = ?
+            ORDER BY id
+        `
+        var retreivedVendor = await executeQuery(
+            q_get_pm_categories,
+            [userId, businessCategoryId]
+        )
+        res.status(200).json({
+            pMethod: retreivedVendor
+        })
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.addPMethodCategory = async (req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.body.name
+        var type = req.body.type
+        var parent = req.body.parent
+        var categoryNodeId = req.body.categoryNodeId
+
+        if (parent == 0) { // add main pm category
+            var q_insert_pm = `
+                INSERT INTO payment_method_categories
+                (user_id, business_category_id, name)
+                VALUES (?, ?, ?)
+            `
+            await executeQuery(
+                q_insert_pm,
+                [userId, categoryNodeId, name]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.editPMethodCategory = async (req, res) => {
+    try {
+        var nodeId = req.body.pMethodNodeId
+        var name = req.body.name
+        var nodeIdArr = nodeId.split('-')
+        var id = nodeIdArr[0]
+        if (nodeIdArr.length == 1) { // change the name of main business category
+            var q_update_pmethod_category_name = `
+                UPDATE payment_method_categories
+                SET name = ?
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_update_pmethod_category_name,
+                [name, id]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.deletePMethodCategory = async (req, res) => {
+    try {
+        console.log(nodeId)
+        var nodeId = req.query.nodeId
+        var nodeIdArr = nodeId.split('-')
+        var id = nodeIdArr[0]
+        if (nodeIdArr.length == 1) { // in case of main category
+            var q_delete_category = `
+                DELETE FROM payment_method_categories
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_delete_category,
+                [nodeId]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err)
+    }
+}
+
+module.exports.getPAccountCategory = async (req, res) => {
+    try {
+        var userId = req.userId
+        var businessCategoryId = req.query.businessCategoryId
+        var q_get_pc_categories = `
+            SELECT id, name
+            FROM pay_from_account_categories
+            WHERE user_id = ? AND business_category_id = ?
+            ORDER BY id
+        `
+        var retreivedVendor = await executeQuery(
+            q_get_pc_categories,
+            [userId, businessCategoryId]
+        )
+        res.status(200).json({
+            pAccount: retreivedVendor
+        })
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.addPAccountCategory = async (req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.body.name
+        var type = req.body.type
+        var parent = req.body.parent
+        var categoryNodeId = req.body.categoryNodeId
+
+        if (parent == 0) { // add main pm category
+            var q_insert_pc = `
+                INSERT INTO pay_from_account_categories
+                (user_id, business_category_id, name)
+                VALUES (?, ?, ?)
+            `
+            await executeQuery(
+                q_insert_pc,
+                [userId, categoryNodeId, name]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.editPAccountCategory = async (req, res) => {
+    try {
+        var nodeId = req.body.pAccountNodeId
+        var name = req.body.name
+        var nodeIdArr = nodeId.split('-')
+        var id = nodeIdArr[0]
+        if (nodeIdArr.length == 1) { // change the name of main business category
+            var q_update_paccount_category_name = `
+                UPDATE pay_from_account_categories
+                SET name = ?
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_update_paccount_category_name,
+                [name, id]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.deletePAccountCategory = async (req, res) => {
+    try {
+        var nodeId = req.query.nodeId
+        console.log(nodeId)
+        var nodeIdArr = nodeId.split('-')
+        var id = nodeIdArr[0]
+        if (nodeIdArr.length == 1) { // in case of main category
+            var q_delete_category = `
+                DELETE FROM pay_from_account_categories
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_delete_category,
+                [nodeId]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err)
+    }
+}

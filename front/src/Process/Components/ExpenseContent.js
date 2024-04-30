@@ -19,6 +19,7 @@ import ConfirmModal from "./ConfirmModal";
 export default function ExpenseContent(props) {
   const categoryId = props.categoryId;
   const categoryName = props.categoryName;
+  const isUploadClicked = props.isUploadClicked;
   const [pageUpdate, setPageUpdate] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false)
@@ -65,9 +66,9 @@ export default function ExpenseContent(props) {
               </Typography>
             </div>
             <div className="flex w-full shrink-0 gap-2 md:w-max">
-              <Button className="flex items-center gap-3 bg-primary" size="sm" onClick={handleClickAdd}>
+              {/* <Button className="flex items-center gap-3 bg-primary" size="sm" onClick={handleClickAdd}>
                 <PlusIcon strokeWidth={2} className="h-4 w-4" /> Add Expense
-              </Button>
+              </Button> */}
               <Button className="flex items-center gap-3 bg-secondary" size="sm" onClick={handleClickEdit}>
                 <PencilIcon strokeWidth={2} className="h-4 w-4" /> Edit Expense
               </Button>
@@ -81,7 +82,7 @@ export default function ExpenseContent(props) {
           </div>
         </CardHeader>
         <CardBody className="overflow-scroll px-0">
-          <ExpenseTable categoryId={categoryId} pageUpdate={pageUpdate} selectedRowId={selectedRowId} setSelectedRowId={setSelectedRowId}/>
+          <ExpenseTable isUploadClicked={isUploadClicked} setIsUploadClicked={props.setIsUploadClicked} categoryId={categoryId} pageUpdate={pageUpdate} selectedRowId={selectedRowId} setSelectedRowId={setSelectedRowId}/>
         </CardBody>
         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         </CardFooter>

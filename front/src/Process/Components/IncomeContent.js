@@ -19,12 +19,12 @@ import ConfirmModal from "./ConfirmModal";
 export default function IncomeContent(props) {
   const categoryId = props.categoryId;
   const categoryName = props.categoryName;
+  const isUploadClicked = props.isUploadClicked;
   const [pageUpdate, setPageUpdate] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [modalType, setModalType] = useState('')
   const [selectedRowId, setSelectedRowId] = useState(0);
-
 
   const handlePageUpdate = () => {
     setPageUpdate(!pageUpdate)
@@ -58,21 +58,21 @@ export default function IncomeContent(props) {
           <div className="mb-4 flex flex-col justify-between gap-8 md:flex-row md:items-center">
             <div>
               <Typography variant="h5" color="blue-gray">
-                {categoryName} - Income
+                {categoryName} - Deposit
               </Typography>
               <Typography color="gray" className="mt-1 font-normal">
                 Details about Income of {categoryName}
               </Typography>
             </div>
             <div className="flex w-full shrink-0 gap-2 md:w-max">
-              <Button className="flex items-center gap-3 bg-primary" size="sm" onClick={handleClickAdd}>
+              {/* <Button className="flex items-center gap-3 bg-primary" size="sm" onClick={handleClickAdd}>
                 <PlusIcon strokeWidth={2} className="h-4 w-4" /> Add Income
-              </Button>
+              </Button> */}
               <Button className="flex items-center gap-3 bg-secondary" size="sm" onClick={handleClickEdit}>
-                <PencilIcon strokeWidth={2} className="h-4 w-4" /> Edit Income
+                <PencilIcon strokeWidth={2} className="h-4 w-4" /> Edit Deposit
               </Button>
               <Button className="flex items-center gap-3 bg-tertiary" size="sm" onClick={handleClickDelete}>
-                <GridDeleteIcon strokeWidth={2} className="h-4 w-4" /> Delete Income
+                <GridDeleteIcon strokeWidth={2} className="h-4 w-4" /> Delete Deposit
               </Button>
               {/* <Button className="flex items-center gap-3 bg-secondary" size="sm">
                 <ArrowUpTrayIcon strokeWidth={2} className="h-4 w-4" /> Import
@@ -81,7 +81,7 @@ export default function IncomeContent(props) {
           </div>
         </CardHeader>
         <CardBody className="overflow-scroll px-0">
-          <IncomeTable categoryId={categoryId} pageUpdate={pageUpdate} selectedRowId={selectedRowId} setSelectedRowId={setSelectedRowId}/>
+          <IncomeTable isUploadClicked={isUploadClicked} setIsUploadClicked={props.setIsUploadClicked} categoryId={categoryId} pageUpdate={pageUpdate} selectedRowId={selectedRowId} setSelectedRowId={setSelectedRowId}/>
         </CardBody>
         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         </CardFooter>

@@ -55,6 +55,7 @@ export default function ExpenseTable(props) {
     const pageUpdate = props.pageUpdate;
     const selectedRowId = props.selectedRowId;
     const setSelectedRowId = props.setSelectedRowId;
+    const isUploadClicked = props.isUploadClicked;
 
     const [expenseData, setExpenseData] = useState([]);
 
@@ -64,7 +65,8 @@ export default function ExpenseTable(props) {
         try {
             const res = await Axios().get(`/api/allExpenseData/?businessCategoryId=${categoryId}`)
             setExpenseData(res.data);
-            console.log(res.data)
+            props.setIsUploadClicked(false)
+            // console.log(res.data)
         } catch (err) {
             handleError(err)
         }
@@ -72,7 +74,7 @@ export default function ExpenseTable(props) {
 
     useEffect(() => {
         getExpenseData();
-    }, [pageUpdate])
+    }, [pageUpdate, isUploadClicked])
 
     return (
         <Box style={{ height: 500, width: '100%' }}>

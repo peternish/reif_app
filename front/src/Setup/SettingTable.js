@@ -6,22 +6,16 @@ import { DataGrid, GridPagination, GridToolbarColumnsButton,
 import MuiPagination from "@mui/material/Pagination";
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import useErrorHandler from '../../helper/handleError';
-import Axios from '../../helper/axiosApi';
-import { select } from '@material-tailwind/react';
+import useErrorHandler from '../helper/handleError';
+import Axios from '../helper/axiosApi';
 
 const columns = [
-  { field: 'property', headerName: 'Property', flex: 1, align:'center', headerAlign: 'center', resizable: true },
-  { field: 'date', headerName: 'Date', flex: 0.8, align:'center', headerAlign: 'center' },
-  { field: 'income_category', headerName: 'Income Category', flex: 1, align:'center', headerAlign: 'center' },
-  { field: 'amount', headerName: 'Amount', flex: 0.5, align:'center', headerAlign: 'center' },
-  { field: 'method', headerName: 'Method', flex: 1, align:'center', headerAlign: 'center' },
-  { field: 'description', headerName: 'Description', flex: 1, align:'center', headerAlign: 'center' },
-  { field: 'paid_by', headerName: 'Paid By', flex: 1, align:'center', headerAlign: 'center' },
-  { field: 'balance', headerName: 'Balance', flex: 1, align:'center', headerAlign: 'center' },
-];
+    { field: 'inputValue', headerName: 'Input Value', flex: 1, align:'center', headerAlign: 'center', resizable: true },
+    { field: 'type', headerName: 'Type', flex: 0.8, align:'center', headerAlign: 'center' },
+    { field: 'categoryName', headerName: 'Category', flex: 1, align:'center', headerAlign: 'center' },
+  ];
 
-function CustomToolbar() {
+  function CustomToolbar() {
     return (
         <GridToolbarContainer>
             <GridToolbarColumnsButton/>
@@ -50,35 +44,34 @@ function CustomPagination(props) {
     return <GridPagination ActionsComponent={Pagination} {...props}/>;
 }
 
-export default function IncomeTable(props) {
-    const categoryId = props.categoryId;
+
+
+export default function SettingTable(props) {
     const pageUpdate = props.pageUpdate;
     const selectedRowId = props.selectedRowId;
     const setSelectedRowId = props.setSelectedRowId;
-    const isUploadClicked = props.isUploadClicked;
-    const [incomeData, setIncomeData] = useState([]);
+
+    const [settingData, setSettingData] = useState([]);
 
     const handleError = useErrorHandler();
-    
-    const getIncomeData = async () => {
+
+    const getSettingData = async () => {
         try {
-            const res = await Axios().get(`/api/allIncomeData/?businessCategoryId=${categoryId}`)
-            setIncomeData(res.data);
-            props.setIsUploadClicked(false);
-            // console.log(res.data)
+            const res = await Axios().get(`/api/allSettingData`)
+            setSettingData(res.data);
         } catch (err) {
             handleError(err)
         }
     }
 
     useEffect(() => {
-        getIncomeData();
-    }, [pageUpdate, isUploadClicked])
+        getSettingData();
+    }, [pageUpdate])
 
     return (
         <Box style={{ height: 500, width: '100%' }}>
             {/* <DataGrid rows={incomeData} columns={columns}  */}
-            <DataGrid rows={incomeData} columns={columns} rowSelectionModel={selectedRowId} onRowSelectionModelChange={(newRowSelection) => {setSelectedRowId(newRowSelection);}}
+            <DataGrid rows={settingData} columns={columns} rowSelectionModel={selectedRowId} onRowSelectionModelChange={(newRowSelection) => {setSelectedRowId(newRowSelection);}}
                 slots={{ toolbar: CustomToolbar, pagination: CustomPagination }} 
                 initialState={{
                     pagination: {paginationModel: {pageSize: 10}}

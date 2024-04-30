@@ -104,6 +104,7 @@ export default function CategoryTree() {
                     >
                         {
                             categories.map((category) => {
+                                console.log(categories)
                                 return (
                                     <RenderTree
                                         category={category}

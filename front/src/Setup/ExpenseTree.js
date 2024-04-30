@@ -106,8 +106,9 @@ export default function ExpenseTree() {
                 />
             }
             <div className='flex flex-col items-center'>
-                <Card className='bg-secondary w-full text-white flex justify-center items-center p-3 text-[1.5rem]'>
-                    <h1>Ex/In: {categoryNodeLabel}</h1>
+                <Card className='bg-secondary w-full text-white flex justify-center items-center p-3'>
+                    <h1>Expense/Deposit categories: </h1>
+                    <h1 className='text-[1.5rem]'>{categoryNodeLabel}</h1>
                 </Card>
                 <div className='flex flex-col w-full gap-4'>
                     <Box className='w-full my-2'>

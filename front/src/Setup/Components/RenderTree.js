@@ -21,7 +21,7 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
                 <div className='flex items-center justify-between w-full py-1 border-b-2 border-gray-300'>
                     <div>{label}</div>
                     <div className='flex items-center'>
-                        <i
+                        {/* <i
                             className="fa-regular fa-square-plus text-primary text-xl ml-4"
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -33,7 +33,7 @@ const CustomTreeItem = React.forwardRef((props, ref) => {
                                     handleClickAdd(nodeId, type)
                                 }
                             }}
-                        />
+                        /> */}
                         <i
                             className='fa-regular fa-edit text-secondary text-xl ml-4'
                             onClick={(e) => {
