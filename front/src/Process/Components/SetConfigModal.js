@@ -25,6 +25,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
                                 invoiceData, setInvoiceData, businessCategory, expenseCategory, vendorCategory, descriptionCategory, pMethodCategory, pAccountCategory}) {
     const [expenseItem, setExpenseItem] =useState([])
     const [depositItem, setDepositItem] = useState([])
+    const [businessCategoryItem, setBusinessCategoryItem] = useState([])
     const [vendorItem, setVendorItem] = useState([])
     const [descriptionItem, setDescriptionItem] = useState([])
     const [pMethodItem, setPMethodItem] = useState([])
@@ -47,14 +48,40 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         setPAccountItem(pAccountCategory.filter((val) => val['business_category_id'] == businessCategoryId))
     }
     
+    const getBusinessCategories = async () => {
+        var expense = expenseCategory.filter((val) => val['id'] == expenseCategoryId)
+        if (expense.length > 0)
+            setBusinessCategoryItem(businessCategory.filter((val) => val['id'] == expense[0]['business_category_id']))
+    }
+
     const getExpenseOrDeposit = async () => {
-        if (invoiceState == 'Deposit')
-            setExpenseItem(expenseCategory.filter((val) => (val['business_category_id'] == businessCategoryId && val['type'] == 'income')))
-        else
-            setExpenseItem(expenseCategory.filter((val) => (val['business_category_id'] == businessCategoryId && val['type'] == 'expense')))
+        setBusinessCategoryItem([])
+        setBusinessCategoryId('')
+        setExpenseCategoryId('')
+        setVendorCategoryId('')
+        setDescriptionCategoryId('')
+        setPMethodCategoryId('')
+        setPAccountCategoryId('')
+        if (invoiceState == 'Deposit') {
+            setExpenseItem(expenseCategory.filter((val) => (val['type'] == 'income')))
+        }
+        else {
+            setExpenseItem(expenseCategory.filter((val) => (val['type'] == 'expense')))
+        }
     }
     
     const handleClick = async () => {
+        if (!invoiceState) {
+            alert('Please Select Type!');
+            return false;
+        }
+        if (!expenseCategoryId) {
+            alert('Please Select Deposit or Expense');
+            return false;
+        }
+        if (!businessCategoryId) {
+            alert('Please Select Entity!');
+        }
         if (!businessCategoryId || !invoiceState || !expenseCategoryId || !vendorCategoryId || !descriptionCategoryId || !pMethodCategoryId || !pAccountCategoryId) {
             alert('Please select categories!');
             return false;
@@ -100,14 +127,16 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
 
     useEffect(() => {
         getCategories()
-        getExpenseOrDeposit()
+        // getExpenseOrDeposit()
     }, [businessCategoryId])
     
     useEffect(() => {
         getExpenseOrDeposit()
     }, [invoiceState])
+
     useEffect(() => {
-    }, [invoiceData])
+        getBusinessCategories()
+    }, [expenseCategoryId])
 
     // const handleClick = async () => {
     //     try {
@@ -155,38 +184,18 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
     //         handleError(err)
     //     }
     // }
-
+    
     return (
         <Dialog
-            open={showModal}
-            size="xl"
-            handler={handleOpen}
+        open={showModal}
+        size="xl"
+        handler={handleOpen}
         >
             <DialogHeader>Set Config</DialogHeader>
             <DialogBody className="" >
             <div>
                 <div class="mb-3 border-b-4">
-                    <div class="mb-1 grid grid-cols-12">
-                        <div class='col-span-11'>
-                            <h1 class="font-bold">Text:</h1>
-                            {
-                                invoiceData[0] != null &&
-                                <div class="mb-2">{invoiceData[0][1]}</div>
-                            }
-                            
-                        </div>
-                    </div>
-                    <div className="mb-1 grid grid-cols-7 grid-center">
-                        {/* <Select label="Method" value={method} onChange={(val) => {setMethod(val)}}> */}
-                        <div class="col-span-1">
-                            <Select label="Entities" value={businessCategoryId} onChange={(val) => {setBusinessCategoryId(val)}}>
-                                {businessCategory.map((business) => {
-                                    return (
-                                        <Option value={business.id} key={business.id}>{business.name}</Option>
-                                    )
-                                })}
-                            </Select>
-                        </div>
+                    <div class="mb-1 grid grid-cols-5">
                         <div class="col-span-1">
                             <Select label="Type" value={invoiceState} onChange={(val) => {SetInvoiceState(val)}}>
                                 <Option value="Deposit">Deposit</Option>
@@ -200,7 +209,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
                                 <Option value="Expense">Expense</Option>
                             </Select>)
                         }
-
+                    
                         {
                             invoiceState != '' && (
                             <Select label={invoiceState} onChange={(val) => setExpenseCategoryId(val)}>
@@ -211,6 +220,29 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
                                 })}
                             </Select>)
                         }
+                        <h5 class="ms-2 col-span-2 flex flex-col justify-end text-tertiary">(*Please Select Type First!)</h5>
+                    </div>
+                    <div class="mb-1 grid grid-cols-12">
+                        <div class='col-span-11'>
+                            <h1 class="font-bold">Text:</h1>
+                            {
+                                invoiceData[0] != null &&
+                                <div class="mb-2">{invoiceData[0][1]}</div>
+                            }
+                            
+                        </div>
+                    </div>
+                    <div className="mb-1 grid grid-cols-5 grid-center">
+                        {/* <Select label="Method" value={method} onChange={(val) => {setMethod(val)}}> */}
+                        <div class="col-span-1">
+                            <Select label="Entities" onChange={(val) => {setBusinessCategoryId(val)}}>
+                                {businessCategoryItem.map((business) => {
+                                    return (
+                                        <Option value={business.id} key={business.id}>{business.name}</Option>
+                                    )
+                                })}
+                            </Select>
+                        </div>
                         <div class="col-span-1">
                             <Select label="Vendor/Work" onChange={(val) => setVendorCategoryId(val)}>
                                 {vendorItem.map((vendor) => {
