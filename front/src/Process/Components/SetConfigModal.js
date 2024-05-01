@@ -81,6 +81,26 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         }
         if (!businessCategoryId) {
             alert('Please Select Entity!');
+            return false;
+        }
+        if (!vendorCategoryId) {
+            alert('Please Select Vendor!')
+            return false
+        }
+        if (!descriptionCategoryId) {
+            alert('Please Select Description!')
+            return false
+        }
+        if (!pMethodCategory) {
+            alert('Please Select Payment Method!')
+            return false
+        }
+        if (!pAccountCategoryId) {
+            if (invoiceState == 'Deposit')
+                alert('Please Selct Paid By!')
+            if (invoiceState == 'Expense')
+                alert('Please Select Pay from Account!')
+            return false
         }
         if (!businessCategoryId || !invoiceState || !expenseCategoryId || !vendorCategoryId || !descriptionCategoryId || !pMethodCategoryId || !pAccountCategoryId) {
             alert('Please select categories!');
