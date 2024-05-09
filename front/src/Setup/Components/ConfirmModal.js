@@ -24,6 +24,9 @@ export default function ConfirmModal({
             else if (type === 'expense') {
                 await Axios().delete(`/api/expenseCategory?nodeId=${nodeId}`)
             }
+            else if (type == 'customer') {
+                await Axios().delete(`/api/customerCategory?nodeId=${nodeId}`)
+            }
             else if (type == 'vendor') {
                 await Axios().delete(`/api/vendorCategory?nodeId=${nodeId}`)
             }

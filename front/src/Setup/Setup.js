@@ -6,6 +6,7 @@ import VendorTree from "./VendorTree";
 import DescriptionTree from "./DescriptionTree";
 import PaymentMethodTree from "./PaymentMethodTree";
 import PayFromAccountTree from "./PayFromAccountTree";
+import CustomerTree from "./CustomerTree";
 import SettingTable from "./SettingTable";
 
 // import { PencilIcon } from "@heroicons/react/24/solid";
@@ -79,15 +80,18 @@ export default function Setup() {
                     <ExpenseTree />
                 </div>
                 <div className="col-span-6 md:col-span-4">
+                    <CustomerTree />
+                </div>
+                <div className="col-span-6 md:col-span-4">
                     <VendorTree />
                 </div>
                 <div className="col-span-6 md:col-span-4">
                     <DescriptionTree />
                 </div>
-                <div className="col-span-6 md:col-span-6">
+                <div className="col-span-6 md:col-span-4">
                     <PaymentMethodTree />
                 </div>
-                <div className="col-span-6 md:col-span-6">
+                <div className="col-span-6 md:col-span-4">
                     <PayFromAccountTree />
                 </div>
             </div>

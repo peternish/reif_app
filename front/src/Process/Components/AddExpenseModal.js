@@ -35,7 +35,7 @@ export function AddExpenseModal({ showModal, setShowModal, modalType, selectedRo
     const [paidFrom, setPaidFrom] = useState('')
     const [receipt, setReceipt] = useState('')
     const [contractor, setContractor] = useState('')
-
+    const [expenseName, setExpenseName] = useState('')
     const [properties, setProperties] = useState([])
     const [categories, setCategories] = useState([])
 
@@ -215,14 +215,14 @@ export function AddExpenseModal({ showModal, setShowModal, modalType, selectedRo
         >
             <DialogHeader>{modalType}</DialogHeader>
             <DialogBody>
-                {/* <Input
+                <Input
                     type="text"
                     label={`Input ${modalType}`}
                     size="lg"
                     value={expenseName}
                     onChange={(e) => setExpenseName(e.target.value)}
-                /> */}
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                />
+                <div className="grid grid-cols-2 gap-4 mb-4">l
                 <div className="">
                         <Select label="Select Property" value={propertyId} onChange={(val) => {
                             if (val == 'addNew')

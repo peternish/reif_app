@@ -29,6 +29,10 @@ const {
     editPAccountCategory,
     deletePAccountCategory,
     getPAccountCategory,
+    getCustomer,
+    addCustomerCategory,
+    editCustomerCategory,
+    deleteCustomerCategory,
 } = require('../controller/setup')
 
 const {
@@ -37,6 +41,8 @@ const {
     uploadInvoiceFile,
     addConfig, addSimiliarConfig,
     addPrpoertyFromProcess, addIncomeCategoryFromProcess,
+    addBusinessCategoryFromProcess,
+    addCustomerCategoryFromProcess, addVendorCategoryFromProcess, addDescriptionCategoryFromProcess, addPMethodCategoryFromProcess,addPAccountCategoryFromProcess,
 } = require('../controller/process')
 
 const router = express.Router()
@@ -74,6 +80,11 @@ router.delete('/expenseData', deleteExpenseData)
 router.get('/allExpenseData', getAllExpenseData)
 router.get('/expenseData', getExpenseData)
 
+//process Customer/Properties
+router.get('/customerCategory', getCustomer)
+router.post('/customerCategory', addCustomerCategory)
+router.put('/customerCategory', editCustomerCategory)
+router.delete('/customerCategory', deleteCustomerCategory)
 
 //process Vendor/Worker
 router.get('/getVendor', getVendor)
@@ -111,4 +122,15 @@ router.get('/addPropertyFromProcess', addPrpoertyFromProcess)
 
 //add income category from process
 router.get('/addIncomeCategoryFromProcess', addIncomeCategoryFromProcess)
+
+//add business category from process
+router.get('/addBusinessCategoryFromProcess', addBusinessCategoryFromProcess)
+
+//add categories from process
+router.get('/addCustomerCategoryFromProcess', addCustomerCategoryFromProcess)
+router.get('/addVendorCategoryFromProcess', addVendorCategoryFromProcess)
+router.get('/addDescriptionCategoryFromProcess', addDescriptionCategoryFromProcess)
+router.get('/addPMethodCategoryFromProcess', addPMethodCategoryFromProcess)
+router.get('/addPAccountCategoryFromProcess', addPAccountCategoryFromProcess)
+
 module.exports = router

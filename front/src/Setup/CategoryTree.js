@@ -52,7 +52,6 @@ export default function CategoryTree() {
     const fetchCategories = async () => {
         try {
             const res = await Axios().get('/api/businessCategory')
-            console.log(res.data)
             setCategories(res.data)
         } catch (err) {
             handleError(err)
@@ -104,7 +103,6 @@ export default function CategoryTree() {
                     >
                         {
                             categories.map((category) => {
-                                console.log(categories)
                                 return (
                                     <RenderTree
                                         category={category}

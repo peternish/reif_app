@@ -21,6 +21,7 @@ export default function Process() {
   const [invoiceData, setInvoiceData] = useState([])
   const [businessCategory, setBusinessCategory] = useState([])
   const [expenseCategory, setExpenseCategory] = useState([])
+  const [customerCategory, setCustomerCategory] = useState([])
   const [vendorCategory, setVendorCategory] = useState([])
   const [descriptionCategory, setDescriptionCategory] = useState([])
   const [pMethodCategory, setPMethodCategory] = useState([])
@@ -74,6 +75,7 @@ export default function Process() {
     setInvoiceData(res.data.invoiceData)
     setBusinessCategory(res.data.businessCategory)
     setExpenseCategory(res.data.expenseCategory)
+    setCustomerCategory(res.data.customerCategory)
     setVendorCategory(res.data.vendorCategory)
     setDescriptionCategory(res.data.descriptionCategory)
     setPMethodCategory(res.data.pMethodCategory)
@@ -104,7 +106,7 @@ export default function Process() {
       <>
         {
           <SetConfigModal showModal={showSetModal} setShowModal={setShowSetModal} handlePageUpdate={handlePageUpdate} invoiceData={invoiceData} setInvoiceData={setInvoiceData}
-                          businessCategory={businessCategory} expenseCategory={expenseCategory} vendorCategory={vendorCategory} descriptionCategory={descriptionCategory}
+                          businessCategory={businessCategory} expenseCategory={expenseCategory} customerCategory={customerCategory} vendorCategory={vendorCategory} descriptionCategory={descriptionCategory}
                           pMethodCategory={pMethodCategory} pAccountCategory={pAccountCategory}
           ></SetConfigModal>
         }
@@ -119,7 +121,7 @@ export default function Process() {
                 Upload Invoice
             </Button>
           </div>
-          <Tabs value={categories[0].id} className="max-w-[85rem] mx-auto">
+          <Tabs value={categories[0].id} className="mx-auto">
             <TabsHeader
               className="bg-secondary h-14 w-full"
               indicatorProps={{

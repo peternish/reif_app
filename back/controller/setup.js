@@ -816,3 +816,94 @@ module.exports.deletePAccountCategory = async (req, res) => {
         handleError(err)
     }
 }
+
+module.exports.getCustomer = async (req, res) => {
+    try {
+        var userId = req.userId
+        var businessCategoryId = req.query.businessCategoryId
+        var q_get_customer_categories = `
+            SELECT id, name
+            FROM customer_categories
+            WHERE user_id = ? AND business_category_id = ?
+            ORDER BY id
+        `
+        var retreivedVendor = await executeQuery(
+            q_get_customer_categories,
+            [userId, businessCategoryId]
+        )
+        res.status(200).json({
+            customer: retreivedVendor
+        })
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.addCustomerCategory = async (req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.body.name
+        var type = req.body.type
+        var parent = req.body.parent
+        var categoryNodeId = req.body.categoryNodeId
+
+        if (parent == 0) { // add main expense category
+            var q_insert_vendor = `
+                INSERT INTO customer_categories
+                (user_id, business_category_id, name)
+                VALUES (?, ?, ?)
+            `
+            await executeQuery(
+                q_insert_vendor,
+                [userId, categoryNodeId, name]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.editCustomerCategory = async (req, res) => {
+    try {
+        var nodeId = req.body.customerNodeId
+        var name = req.body.name
+        var nodeIdArr = nodeId.split('-')
+        var id = nodeIdArr[0]
+        if (nodeIdArr.length == 1) { // change the name of main business category
+            var q_update_customer_category_name = `
+                UPDATE customer_categories
+                SET name = ?
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_update_customer_category_name,
+                [name, id]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err, res)
+    }
+}
+
+module.exports.deleteCustomerCategory = async (req, res) => {
+    try {
+        var nodeId = req.query.nodeId
+        var nodeIdArr = nodeId.split('-')
+        var id = nodeIdArr[0]
+        if (nodeIdArr.length == 1) { // in case of main category
+            var q_delete_category = `
+                DELETE FROM customer_categories
+                WHERE id = ?
+            `
+            await executeQuery(
+                q_delete_category,
+                [nodeId]
+            )
+        }
+        res.status(200).json({})
+    } catch (err) {
+        handleError(err)
+    }
+}

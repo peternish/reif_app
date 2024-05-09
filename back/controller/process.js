@@ -87,7 +87,7 @@ module.exports.getAllIncomeData = async (req, res) => {
         var q_get_categories = `
             SELECT
             incomes.id As id,
-            business_categories.name As property,
+            customer_categories.name As property,
             incomes.date As date,
             expense_categories.name As income_category,
             incomes.amount As amount,
@@ -98,6 +98,7 @@ module.exports.getAllIncomeData = async (req, res) => {
             FROM incomes
             LEFT JOIN config ON incomes.config_id = config.id
             LEFT JOIN expense_categories ON config.expense_category_id = expense_categories.id
+            LEFT JOIN customer_categories ON config.customer_category_id = customer_categories.id
             LEFT JOIN vendor_categories ON config.vendor_category_id = vendor_categories.id
             LEFT JOIN description_categories ON config.description_category_id = description_categories.id
             LEFT JOIN payment_method_categories ON config.payment_method_category_id = payment_method_categories.id
@@ -244,7 +245,7 @@ module.exports.getAllExpenseData = async (req, res) => {
         var q_get_categories = `
             SELECT
             expenses.id As id,
-            business_categories.name As property,
+            customer_categories.name As property,
             expenses.date As date,
             expense_categories.name As expense_category,
             expenses.amount As amount,
@@ -256,6 +257,7 @@ module.exports.getAllExpenseData = async (req, res) => {
             FROM expenses
             LEFT JOIN config ON expenses.config_id = config.id
             LEFT JOIN expense_categories ON config.expense_category_id = expense_categories.id
+            LEFT JOIN customer_categories ON config.customer_category_id = customer_categories.id
             LEFT JOIN vendor_categories ON config.vendor_category_id = vendor_categories.id
             LEFT JOIN description_categories ON config.description_category_id = description_categories.id
             LEFT JOIN payment_method_categories ON config.payment_method_category_id = payment_method_categories.id
@@ -709,6 +711,16 @@ module.exports.uploadInvoiceFile = async(req, res) => {
 
         q_get_categories = `
             SELECT id, name, business_category_id
+            FROM customer_categories
+            WHERE user_id = ?
+        `
+        var customer_category = await executeQuery(
+            q_get_categories,
+            [userId]
+        )
+
+        q_get_categories = `
+            SELECT id, name, business_category_id
             FROM vendor_categories
             WHERE user_id = ?
         `
@@ -751,6 +763,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
             'invoiceData': invoiceData, 
             'businessCategory': business_category,
             'expenseCategory': expense_category,
+            'customerCategory': customer_category,
             'vendorCategory': vendor_category,
             'descriptionCategory': description_category,
             'pMethodCategory': payment_method_category,
@@ -770,6 +783,7 @@ module.exports.addConfig = async(req, res) => {
         var businessCategoryId = req.body.businessCategoryId
         var invoiceType = req.body.invoiceType
         var expenseCategoryId = req.body.expenseCategoryId
+        var customerCategoryId = req.body.customerCategoryId
         var vendorCategoryId = req.body.vendorCategoryId
         var descriptionCategoryId = req.body.descriptionCategoryId
         var pMethodCategoryId = req.body.pMethodCategoryId
@@ -777,12 +791,12 @@ module.exports.addConfig = async(req, res) => {
         
         var q_insret_config = `
             INSERT INTO config
-            (expense_category_id, vendor_category_id, description_category_id, payment_method_category_id, pay_from_account_category_id, business_category_id, name)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            (expense_category_id, vendor_category_id, description_category_id, payment_method_category_id, pay_from_account_category_id, business_category_id, customer_category_id, name)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `
         await executeQuery(
             q_insret_config,
-            [expenseCategoryId, vendorCategoryId, descriptionCategoryId, pMethodCategoryId, pAccountCategoryId, businessCategoryId, textItem[1]]
+            [expenseCategoryId, vendorCategoryId, descriptionCategoryId, pMethodCategoryId, pAccountCategoryId, businessCategoryId, customerCategoryId, textItem[1]]
         )
         var q_get_last_id = `
             SELECT LAST_INSERT_ID()
@@ -801,30 +815,29 @@ module.exports.addConfig = async(req, res) => {
         var ch = {
             'date': new Date(textItem[3], parseInt(textItem[0].split('/')[0])-1, parseInt(textItem[0].split('/')[1])),
             'amount': textItem[2][0] == '$' ? parseFloat(textItem[2].substring(1).replace(/,/g, '')) : parseFloat(textItem[2].replace(/,/g, '')),
-            'config_id': returnData,
-            'property': businessCategory['name']
+            'config_id': returnData
         }
         console.log(ch['date'])
         if (invoiceType =='Deposit') {
             var q_incomes = `
                 INSERT INTO incomes
-                (property, date, amount, config_id, user_id)
-                VALUES (?, ?, ?, ?, ?)
+                (date, amount, config_id, user_id)
+                VALUES (?, ?, ?, ?)
             `
             await executeQuery(
                 q_incomes,
-                [ch['property'], ch['date'], ch['amount'], ch['config_id'], req.userId]
+                [ch['date'], ch['amount'], ch['config_id'], req.userId]
             )
         }
         else {
             var q_incomes = `
             INSERT INTO expenses
-            (property, date, amount, config_id, user_id)
-            VALUES (?, ?, ?, ?, ?)
+            (date, amount, config_id, user_id)
+            VALUES (?, ?, ?, ?)
         `
         await executeQuery(
             q_incomes,
-            [ch['property'], ch['date'], ch['amount'], ch['config_id'], req.userId]
+            [ch['date'], ch['amount'], ch['config_id'], req.userId]
         )
         }
 
@@ -852,29 +865,28 @@ module.exports.addSimiliarConfig = async(req, res) => {
             var ch = {
                 'date': new Date(textItem[3], parseInt(textItem[0].split('/')[0])-1, parseInt(textItem[0].split('/')[1])),
                 'amount': textItem[2][0] == '$' ? parseFloat(textItem[2].substring(1).replace(/,/g, '')) : parseFloat(textItem[2].replace(/,/g, '')),
-                'config_id': id,
-                'property': businessCategory['name']
+                'config_id': id
             }
             if (invoiceType =='Deposit') {
                 var q_incomes = `
                     INSERT INTO incomes
-                    (property, date, amount, config_id, user_id)
-                    VALUES (?, ?, ?, ?, ?)
+                    (date, amount, config_id, user_id)
+                    VALUES (?, ?, ?, ?)
                 `
                 executeQuery(
                     q_incomes,
-                    [ch['property'], ch['date'], ch['amount'], ch['config_id'], req.userId]
+                    [ch['date'], ch['amount'], ch['config_id'], req.userId]
                 )
             }
             else {
                 var q_incomes = `
                 INSERT INTO expenses
-                (property, date, amount, config_id, user_id)
-                VALUES (?, ?, ?, ?, ?)
+                (date, amount, config_id, user_id)
+                VALUES (?, ?, ?, ?)
             `
                 executeQuery(
                 q_incomes,
-                [ch['property'], ch['date'], ch['amount'], ch['config_id'], req.userId]
+                [ch['date'], ch['amount'], ch['config_id'], req.userId]
             )
             }
         })
@@ -942,6 +954,208 @@ module.exports.addIncomeCategoryFromProcess = async(req, res) => {
         await executeQuery(
             q_insert_expense_category,
             [userId, incomeCategoryId, incomeCategoryName, incomeCategoryType, '[]']
+        )
+        var q_get_last_id = `
+            SELECT LAST_INSERT_ID()
+        `
+        var returnData = await executeQuery(
+            q_get_last_id
+        )
+        returnData = returnData[0]['LAST_INSERT_ID()']
+        res.status(200).json({id: returnData})
+        // console.log(returnData)
+    } catch(error) {
+        handleError(error, res)
+    }
+}
+
+module.exports.addBusinessCategoryFromProcess = async(req, res) => {
+    try {
+        var userId = req.userId
+        var businessCategoryName = req.query.name
+        var q_insert_expense_category = `
+                INSERT INTO business_categories
+                (user_id, name, children)
+                VALUES (?, ?, ?)
+            `
+        await executeQuery(
+            q_insert_expense_category,
+            [userId, businessCategoryName, '[]']
+        )
+        var q_get_last_id = `
+            SELECT LAST_INSERT_ID()
+        `
+        var returnData = await executeQuery(
+            q_get_last_id
+        )
+        returnData = returnData[0]['LAST_INSERT_ID()']
+        res.status(200).json({id: returnData})
+        // console.log(returnData)
+    } catch(error) {
+        handleError(error, res)
+    }
+}
+
+module.exports.addCustomerCategoryFromProcess = async(req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.query.name
+        var businessCategoryId = req.query.businessCategoryId
+
+        var q_insert_expense_category = `
+                INSERT INTO customer_categories
+                (user_id, name, business_category_id)
+                VALUES (?, ?, ?)
+            `
+        await executeQuery(
+            q_insert_expense_category,
+            [userId, name, businessCategoryId]
+        )
+        var q_get_last_id = `
+            SELECT LAST_INSERT_ID()
+        `
+        var returnData = await executeQuery(
+            q_get_last_id
+        )
+        returnData = returnData[0]['LAST_INSERT_ID()']
+        res.status(200).json({id: returnData})
+        // console.log(returnData)
+    } catch(error) {
+        handleError(error, res)
+    }
+}
+
+
+module.exports.addVendorCategoryFromProcess = async(req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.query.name
+        var businessCategoryId = req.query.businessCategoryId
+
+        var q_insert_expense_category = `
+                INSERT INTO vendor_categories
+                (user_id, name, business_category_id)
+                VALUES (?, ?, ?)
+            `
+        await executeQuery(
+            q_insert_expense_category,
+            [userId, name, businessCategoryId]
+        )
+        var q_get_last_id = `
+            SELECT LAST_INSERT_ID()
+        `
+        var returnData = await executeQuery(
+            q_get_last_id
+        )
+        returnData = returnData[0]['LAST_INSERT_ID()']
+        res.status(200).json({id: returnData})
+        // console.log(returnData)
+    } catch(error) {
+        handleError(error, res)
+    }
+}
+
+module.exports.addDescriptionCategoryFromProcess = async(req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.query.name
+        var businessCategoryId = req.query.businessCategoryId
+
+        var q_insert_expense_category = `
+                INSERT INTO description_categories
+                (user_id, name, business_category_id)
+                VALUES (?, ?, ?)
+            `
+        await executeQuery(
+            q_insert_expense_category,
+            [userId, name, businessCategoryId]
+        )
+        var q_get_last_id = `
+            SELECT LAST_INSERT_ID()
+        `
+        var returnData = await executeQuery(
+            q_get_last_id
+        )
+        returnData = returnData[0]['LAST_INSERT_ID()']
+        res.status(200).json({id: returnData})
+        // console.log(returnData)
+    } catch(error) {
+        handleError(error, res)
+    }
+}
+
+module.exports.addVendorCategoryFromProcess = async(req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.query.name
+        var businessCategoryId = req.query.businessCategoryId
+
+        var q_insert_expense_category = `
+                INSERT INTO vendor_categories
+                (user_id, name, business_category_id)
+                VALUES (?, ?, ?)
+            `
+        await executeQuery(
+            q_insert_expense_category,
+            [userId, name, businessCategoryId]
+        )
+        var q_get_last_id = `
+            SELECT LAST_INSERT_ID()
+        `
+        var returnData = await executeQuery(
+            q_get_last_id
+        )
+        returnData = returnData[0]['LAST_INSERT_ID()']
+        res.status(200).json({id: returnData})
+        // console.log(returnData)
+    } catch(error) {
+        handleError(error, res)
+    }
+}
+
+module.exports.addPAccountCategoryFromProcess = async(req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.query.name
+        var businessCategoryId = req.query.businessCategoryId
+
+        var q_insert_expense_category = `
+                INSERT INTO pay_from_account_categories
+                (user_id, name, business_category_id)
+                VALUES (?, ?, ?)
+            `
+        await executeQuery(
+            q_insert_expense_category,
+            [userId, name, businessCategoryId]
+        )
+        var q_get_last_id = `
+            SELECT LAST_INSERT_ID()
+        `
+        var returnData = await executeQuery(
+            q_get_last_id
+        )
+        returnData = returnData[0]['LAST_INSERT_ID()']
+        res.status(200).json({id: returnData})
+        // console.log(returnData)
+    } catch(error) {
+        handleError(error, res)
+    }
+}
+
+module.exports.addPMethodCategoryFromProcess = async(req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.query.name
+        var businessCategoryId = req.query.businessCategoryId
+
+        var q_insert_expense_category = `
+                INSERT INTO payment_method_categories
+                (user_id, name, business_category_id)
+                VALUES (?, ?, ?)
+            `
+        await executeQuery(
+            q_insert_expense_category,
+            [userId, name, businessCategoryId]
         )
         var q_get_last_id = `
             SELECT LAST_INSERT_ID()
