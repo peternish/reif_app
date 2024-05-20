@@ -43,6 +43,7 @@ const {
     addPrpoertyFromProcess, addIncomeCategoryFromProcess,
     addBusinessCategoryFromProcess,
     addCustomerCategoryFromProcess, addVendorCategoryFromProcess, addDescriptionCategoryFromProcess, addPMethodCategoryFromProcess,addPAccountCategoryFromProcess,
+    getFileList,getAllCategories
 } = require('../controller/process')
 
 const router = express.Router()
@@ -132,5 +133,8 @@ router.get('/addVendorCategoryFromProcess', addVendorCategoryFromProcess)
 router.get('/addDescriptionCategoryFromProcess', addDescriptionCategoryFromProcess)
 router.get('/addPMethodCategoryFromProcess', addPMethodCategoryFromProcess)
 router.get('/addPAccountCategoryFromProcess', addPAccountCategoryFromProcess)
+
+router.post('/getFileList', getFileList),
+router.get('/getAllCategories', getAllCategories)
 
 module.exports = router

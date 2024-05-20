@@ -22,7 +22,7 @@ var stringSimiliarity = require("string-similarity");
 // import InvoiceSetting from"./InvoiceSetting";
 
 export function SetConfigModal({ showModal, setShowModal, handlePageUpdate, 
-                                invoiceData, setInvoiceData, businessCategory, expenseCategory, customerCategory, vendorCategory, descriptionCategory, pMethodCategory, pAccountCategory}) {
+                                invoiceData, setInvoiceData, businessCategory, expenseCategory, customerCategory, vendorCategory, descriptionCategory, pMethodCategory, pAccountCategory, importedFileID}) {
     const [expenseItem, setExpenseItem] =useState([])
     const [depositItem, setDepositItem] = useState([])
     const [businessCategoryItem, setBusinessCategoryItem] = useState([])
@@ -49,6 +49,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
 
     const handleError = useErrorHandler()
     const handleOpen = () => {
+        console.log(invoiceData)
         setShowModal(false)
     }
     const getCategories = async () => {
@@ -168,6 +169,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         //     return false;
         // }
         const res = await Axios().post('/api/addConfig', {
+            importedFileID: importedFileID,
             textItem: invoiceData[0],
             businessCategoryId: businessCategoryId,
             invoiceType: invoiceState,
@@ -180,12 +182,13 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         })
         var similiarInvoice = [];
         if (res.data.data == true) {
-            console.log(invoiceData)
+            // console.log(invoiceData)
             similiarInvoice = invoiceData.slice(1, invoiceData.length).filter((item) => {
                 return item[1] == invoiceData[0][1]
             });
-            console.log(similiarInvoice)
+            // console.log(similiarInvoice)
             const res_1 = await Axios().post('/api/addSimiliarConfig', {
+                importedFileID: importedFileID,
                 id: res.data.id,
                 similiarInvoice: similiarInvoice,
                 invoiceType: res.data.invoiceType,
@@ -194,7 +197,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
                 var tmp = invoiceData.slice(1, invoiceData.length).filter((item) => {
                     return stringSimiliarity.compareTwoStrings(item[1], invoiceData[0][1]) < 0.7
                 });
-                console.log(tmp)
+                // console.log(tmp)
                 setInvoiceData(tmp)
                 // setBusinessCategoryId(0)
                 // SetInvoiceState('')

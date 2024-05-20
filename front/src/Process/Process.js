@@ -15,8 +15,10 @@ import Axios from "../helper/axiosApi";
 import IncomeContent from "./Components/IncomeContent";
 import ExpenseContent from "./Components/ExpenseContent";
 import { SetConfigModal } from "./Components/SetConfigModal"
+import { UploadedPDFModal } from "./Components/UploadedPDFModal"
 
 export default function Process() {
+  const [importedFileID, setImportedFileID] = useState()
   const [categories, setCategories] = useState([])
   const [invoiceData, setInvoiceData] = useState([])
   const [businessCategory, setBusinessCategory] = useState([])
@@ -30,6 +32,8 @@ export default function Process() {
   const [loading, setLoading] = useState(true)
   const [isUploadClicked, setIsUploadClicked] = useState(false)
   const [showSetModal, setShowSetModal] = useState(false)
+  const [showSetPDFModal, setShowSetPDFModal] = useState(false)
+  const [uploadedFile, setUploadedFile] = useState([])
   const [pageUpdate, setPageUpdate] = useState(false)
   const inputFile = useRef(null)
   const handleError = useErrorHandler()
@@ -50,6 +54,16 @@ export default function Process() {
       handleError(err)
     }
     setLoading(false)
+  }
+  const onUploadedPDFClick = async (e) => {
+    var data = new FormData();
+    const res = await Axios().post('/api/getFileList', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    setUploadedFile(res.data.data)
+    setShowSetPDFModal(true)
   }
   const onUploadButtonClick = () => {
     inputFile.current.click();
@@ -72,6 +86,7 @@ export default function Process() {
         'Content-Type': 'multipart/form-data'
       }
     })
+    setImportedFileID(res.data.importedFileID)
     setInvoiceData(res.data.invoiceData)
     setBusinessCategory(res.data.businessCategory)
     setExpenseCategory(res.data.expenseCategory)
@@ -107,18 +122,31 @@ export default function Process() {
         {
           <SetConfigModal showModal={showSetModal} setShowModal={setShowSetModal} handlePageUpdate={handlePageUpdate} invoiceData={invoiceData} setInvoiceData={setInvoiceData}
                           businessCategory={businessCategory} expenseCategory={expenseCategory} customerCategory={customerCategory} vendorCategory={vendorCategory} descriptionCategory={descriptionCategory}
-                          pMethodCategory={pMethodCategory} pAccountCategory={pAccountCategory}
+                          pMethodCategory={pMethodCategory} pAccountCategory={pAccountCategory} importedFileID={importedFileID}
           ></SetConfigModal>
+        }
+        {
+          <UploadedPDFModal showModal={showSetPDFModal} setShowModal={setShowSetPDFModal} handlePageUpdate={handlePageUpdate} 
+                          setInvoiceData={setInvoiceData} uploadedData={uploadedFile} setImportedFileID={setImportedFileID}
+                          setBusinessCategory={setBusinessCategory} setExpenseCategory={setExpenseCategory} setCustomerCategory={setCustomerCategory} 
+                          setVendorCategory={setVendorCategory} setDescriptionCategory={setDescriptionCategory}
+                          setPMethodCategory={setPMethodCategory} setPAccountCategory={setPAccountCategory}></UploadedPDFModal>
         }
         <div>
           <input type='file' id='file' ref={inputFile} style={{display: 'none'}} accept="application/pdf" onInput={uploadFile}/>
-          <div className="max-w-[85rem] mx-auto mb-2">
+          <div className="flex w-full shrink-0 gap-2 md:w-max mb-2">
             <Button
               className="flex items-center gap-3 bg-primary" size="sm"
               onClick={onUploadButtonClick}
             >
               <ArrowUpOnSquareIcon strokeWidth={2} className="h-4 w-4" />
                 Upload Invoice
+            </Button>
+            <Button
+              className="flex items-center gap-3 bg-secondary" size="sm"
+              onClick={onUploadedPDFClick}
+            >
+                Uploaded PDF
             </Button>
           </div>
           <Tabs value={categories[0].id} className="mx-auto">

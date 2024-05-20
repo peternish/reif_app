@@ -335,6 +335,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
             q_get_all_config_data
         )
         const pdfBinaryData = req.files.file['data'];
+        const pdfFileName = req.files.file['name'];
         var categoryId = req.body.categoryId
         fs.writeFileSync('tmp.pdf', pdfBinaryData, 'binary', (err) => {
             console.log(err)
@@ -398,9 +399,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
                     index++;
                     continue;
                 }
-                //Find First Date
-                // if (index < 50)
-                //     console.log(current)
+
                 if (regxDate.test(current)) {
                     //Till Last Date
                     var dt = '';
@@ -689,6 +688,8 @@ module.exports.uploadInvoiceFile = async(req, res) => {
         }, function (err) {
             console.error('Error: ' + err);
         });
+
+
         var q_get_categories = `
             SELECT id, name
             FROM business_categories
@@ -759,7 +760,26 @@ module.exports.uploadInvoiceFile = async(req, res) => {
             [userId]
         )
 
+        var q_imported_file = `
+            INSERT INTO imported_data
+            (file_name, original_data, extra_data, user_id)
+            VALUES (?, ?, ?, ?)
+        `
+        var imported_file = await executeQuery(
+            q_imported_file,
+            [pdfFileName, JSON.stringify(invoiceData), JSON.stringify(invoiceData), userId]
+        )
+        
+        var q_get_last_id = `
+            SELECT LAST_INSERT_ID()
+        `
+        var imported_file_query = await executeQuery(
+            q_get_last_id
+        )
+        var imported_file_id = imported_file_query[0]['LAST_INSERT_ID()']
+
         res.status(200).json({
+            'importedFileID': imported_file_id,
             'invoiceData': invoiceData, 
             'businessCategory': business_category,
             'expenseCategory': expense_category,
@@ -779,6 +799,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
 module.exports.addConfig = async(req, res) => {
     try {
         var userId = req.userId
+        var importedFileID = req.body.importedFileID
         var textItem = req.body.textItem
         var businessCategoryId = req.body.businessCategoryId
         var invoiceType = req.body.invoiceType
@@ -841,6 +862,21 @@ module.exports.addConfig = async(req, res) => {
         )
         }
 
+        var imported_file = `
+            SELECT extra_data FROM imported_data WHERE id = ${importedFileID}
+        `
+        var extra_data = await executeQuery(
+            imported_file
+        )
+        extra_data = extra_data[0]['extra_data']
+        extra_data = JSON.parse(extra_data)
+        var filtered_extra_data = extra_data.filter((u) => !(u[0] == textItem[0] && u[1] == textItem[1] && u[2] == textItem[2] && u[3] == textItem[3]))
+        console.log(filtered_extra_data.length)
+        extra_data = JSON.stringify(filtered_extra_data)
+
+        var q_update_imported = `UPDATE imported_data SET extra_data = ? WHERE id = ?`
+        await executeQuery(q_update_imported, [extra_data, importedFileID])
+        
         res.status(200).json({'id': returnData, 'invoiceType': invoiceType, 'data': true})
     } catch(err) {
         console.log(err)
@@ -854,12 +890,17 @@ module.exports.addSimiliarConfig = async(req, res) => {
         var similiarInvoice = req.body.similiarInvoice
         var id = req.body.id
         var invoiceType = req.body.invoiceType
-        
+        var importedFileID = req.body.importedFileID
+        console.log(importedFileID)
         //add incomes/expenses
         var q_business_category = `
             SELECT * FROM business_categories WHERE id = ${id}
         `
         businessCategory = await executeQuery(q_business_category)
+        var q_extra_data = `SELECT extra_data FROM imported_data WHERE id = ?`
+        var extra_data = await executeQuery(q_extra_data, [importedFileID])
+        extra_data = extra_data[0]['extra_data']
+        var filtered_extra_data = JSON.parse(extra_data)
 
         similiarInvoice.map((textItem) => {
             var ch = {
@@ -889,8 +930,11 @@ module.exports.addSimiliarConfig = async(req, res) => {
                 [ch['date'], ch['amount'], ch['config_id'], req.userId]
             )
             }
+            filtered_extra_data = filtered_extra_data.filter((u) => !(u[0] == textItem[0] && u[1] == textItem[1] && u[2] == textItem[2] && u[3] == textItem[3]))
         })
-        
+        extra_data = JSON.stringify(filtered_extra_data)
+        var q_update_imported = `UPDATE imported_data SET extra_data = ? WHERE id = ?`
+        await executeQuery(q_update_imported, [extra_data, importedFileID])
 
         res.status(200).json({'data': true})
     } catch(err) {
@@ -1165,6 +1209,111 @@ module.exports.addPMethodCategoryFromProcess = async(req, res) => {
         )
         returnData = returnData[0]['LAST_INSERT_ID()']
         res.status(200).json({id: returnData})
+        // console.log(returnData)
+    } catch(error) {
+        handleError(error, res)
+    }
+}
+
+module.exports.getFileList = async(req, res) => {
+    try {
+        var userId = req.userId
+        var q_file_list = `
+                SELECT id, file_name, extra_data FROM imported_data WHERE user_id = ?
+            `
+        var data = await executeQuery(
+            q_file_list,
+            [userId]
+        )
+        res.status(200).json({'data':data})
+        // console.log(returnData)
+    } catch(error) {
+        handleError(error, res)
+    }
+}
+
+module.exports.getAllCategories = async(req, res) => {
+    try {
+        var userId = req.userId
+        var q_get_categories = `
+            SELECT id, name
+            FROM business_categories
+            WHERE user_id = ?
+        `
+        var business_category = await executeQuery(
+            q_get_categories,
+            [userId]
+        )
+
+        q_get_categories = `
+            SELECT id, name, business_category_id, type
+            FROM expense_categories
+            WHERE user_id = ?
+        `
+        var expense_category = await executeQuery(
+            q_get_categories,
+            [userId]
+        )
+
+        q_get_categories = `
+            SELECT id, name, business_category_id
+            FROM customer_categories
+            WHERE user_id = ?
+        `
+        var customer_category = await executeQuery(
+            q_get_categories,
+            [userId]
+        )
+
+        q_get_categories = `
+            SELECT id, name, business_category_id
+            FROM vendor_categories
+            WHERE user_id = ?
+        `
+        var vendor_category = await executeQuery(
+            q_get_categories,
+            [userId]
+        )
+
+        q_get_categories = `
+            SELECT id, name, business_category_id
+            FROM description_categories
+            WHERE user_id = ?
+        `
+        var description_category = await executeQuery(
+            q_get_categories,
+            [userId]
+        )
+
+        q_get_categories = `
+            SELECT id, name, business_category_id
+            FROM payment_method_categories
+            WHERE user_id = ?
+        `
+        var payment_method_category = await executeQuery(
+            q_get_categories,
+            [userId]
+        )
+
+        q_get_categories = `
+            SELECT id, name, business_category_id
+            FROM pay_from_account_categories
+            WHERE user_id = ?
+        `
+        var pay_from_account_category = await executeQuery(
+            q_get_categories,
+            [userId]
+        )
+
+        res.status(200).json({
+            'businessCategory': business_category,
+            'expenseCategory': expense_category,
+            'customerCategory': customer_category,
+            'vendorCategory': vendor_category,
+            'descriptionCategory': description_category,
+            'pMethodCategory': payment_method_category,
+            'pAccountCategory': pay_from_account_category,
+            'data': true})
         // console.log(returnData)
     } catch(error) {
         handleError(error, res)
