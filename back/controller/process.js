@@ -694,6 +694,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
             SELECT id, name
             FROM business_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var business_category = await executeQuery(
             q_get_categories,
@@ -704,6 +705,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
             SELECT id, name, business_category_id, type
             FROM expense_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var expense_category = await executeQuery(
             q_get_categories,
@@ -714,6 +716,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
             SELECT id, name, business_category_id
             FROM customer_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var customer_category = await executeQuery(
             q_get_categories,
@@ -724,6 +727,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
             SELECT id, name, business_category_id
             FROM vendor_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var vendor_category = await executeQuery(
             q_get_categories,
@@ -734,6 +738,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
             SELECT id, name, business_category_id
             FROM description_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var description_category = await executeQuery(
             q_get_categories,
@@ -744,6 +749,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
             SELECT id, name, business_category_id
             FROM payment_method_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var payment_method_category = await executeQuery(
             q_get_categories,
@@ -754,6 +760,7 @@ module.exports.uploadInvoiceFile = async(req, res) => {
             SELECT id, name, business_category_id
             FROM pay_from_account_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var pay_from_account_category = await executeQuery(
             q_get_categories,
@@ -830,7 +837,7 @@ module.exports.addConfig = async(req, res) => {
 
         //add incomes/expenses
         var q_business_category = `
-            SELECT * FROM business_categories WHERE id = ${returnData}
+            SELECT * FROM business_categories WHERE id = ${returnData} 
         `
         businessCategory = await executeQuery(q_business_category)
         var ch = {
@@ -1040,6 +1047,35 @@ module.exports.addBusinessCategoryFromProcess = async(req, res) => {
     }
 }
 
+module.exports.addExpenseCategoryFromProcess = async(req, res) => {
+    try {
+        var userId = req.userId
+        var name = req.query.name
+        var businessCategoryId = req.query.businessCategoryId
+        var type = req.query.type == 'Expense' ? 'expense' : 'income'
+        console.log(type)
+        var q_insert_expense_category = `
+                INSERT INTO expense_categories
+                (user_id, name, business_category_id, type, children)
+                VALUES (?, ?, ?, ?, ?)
+            `
+        await executeQuery(
+            q_insert_expense_category,
+            [userId, name, businessCategoryId, type, '[]']
+        )
+        var q_get_last_id = `
+            SELECT LAST_INSERT_ID()
+        `
+        var returnData = await executeQuery(
+            q_get_last_id
+        )
+        returnData = returnData[0]['LAST_INSERT_ID()']
+        res.status(200).json({id: returnData})
+        // console.log(returnData)
+    } catch(error) {
+        handleError(error, res)
+    }
+}
 module.exports.addCustomerCategoryFromProcess = async(req, res) => {
     try {
         var userId = req.userId
@@ -1239,6 +1275,7 @@ module.exports.getAllCategories = async(req, res) => {
             SELECT id, name
             FROM business_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var business_category = await executeQuery(
             q_get_categories,
@@ -1249,6 +1286,7 @@ module.exports.getAllCategories = async(req, res) => {
             SELECT id, name, business_category_id, type
             FROM expense_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var expense_category = await executeQuery(
             q_get_categories,
@@ -1259,6 +1297,7 @@ module.exports.getAllCategories = async(req, res) => {
             SELECT id, name, business_category_id
             FROM customer_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var customer_category = await executeQuery(
             q_get_categories,
@@ -1269,6 +1308,7 @@ module.exports.getAllCategories = async(req, res) => {
             SELECT id, name, business_category_id
             FROM vendor_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var vendor_category = await executeQuery(
             q_get_categories,
@@ -1279,6 +1319,7 @@ module.exports.getAllCategories = async(req, res) => {
             SELECT id, name, business_category_id
             FROM description_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var description_category = await executeQuery(
             q_get_categories,
@@ -1289,6 +1330,7 @@ module.exports.getAllCategories = async(req, res) => {
             SELECT id, name, business_category_id
             FROM payment_method_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var payment_method_category = await executeQuery(
             q_get_categories,
@@ -1299,6 +1341,7 @@ module.exports.getAllCategories = async(req, res) => {
             SELECT id, name, business_category_id
             FROM pay_from_account_categories
             WHERE user_id = ?
+            ORDER BY name ASC
         `
         var pay_from_account_category = await executeQuery(
             q_get_categories,

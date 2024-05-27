@@ -45,7 +45,7 @@ export default function SideMenu(props) {
                     <ListItemPrefix>
                         <BanknotesIcon className="h-5 w-5" />
                     </ListItemPrefix>
-                    Deposits
+                    Transactions
                 </ListItem>
                 <ListItem>
                     <ListItemPrefix>

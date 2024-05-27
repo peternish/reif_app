@@ -41,7 +41,7 @@ const {
     uploadInvoiceFile,
     addConfig, addSimiliarConfig,
     addPrpoertyFromProcess, addIncomeCategoryFromProcess,
-    addBusinessCategoryFromProcess,
+    addBusinessCategoryFromProcess, addExpenseCategoryFromProcess,
     addCustomerCategoryFromProcess, addVendorCategoryFromProcess, addDescriptionCategoryFromProcess, addPMethodCategoryFromProcess,addPAccountCategoryFromProcess,
     getFileList,getAllCategories
 } = require('../controller/process')
@@ -126,6 +126,9 @@ router.get('/addIncomeCategoryFromProcess', addIncomeCategoryFromProcess)
 
 //add business category from process
 router.get('/addBusinessCategoryFromProcess', addBusinessCategoryFromProcess)
+
+//add expense/deposit category
+router.get('/addExpenseCategoryFromProcess', addExpenseCategoryFromProcess)
 
 //add categories from process
 router.get('/addCustomerCategoryFromProcess', addCustomerCategoryFromProcess)

@@ -122,7 +122,7 @@ export default function Process() {
         {
           <SetConfigModal showModal={showSetModal} setShowModal={setShowSetModal} handlePageUpdate={handlePageUpdate} invoiceData={invoiceData} setInvoiceData={setInvoiceData}
                           businessCategory={businessCategory} expenseCategory={expenseCategory} customerCategory={customerCategory} vendorCategory={vendorCategory} descriptionCategory={descriptionCategory}
-                          pMethodCategory={pMethodCategory} pAccountCategory={pAccountCategory} importedFileID={importedFileID}
+                          pMethodCategory={pMethodCategory} pAccountCategory={pAccountCategory} importedFileID={importedFileID} isUploadClicked={isUploadClicked} setIsUploadClicked={setIsUploadClicked}
           ></SetConfigModal>
         }
         {
@@ -136,17 +136,17 @@ export default function Process() {
           <input type='file' id='file' ref={inputFile} style={{display: 'none'}} accept="application/pdf" onInput={uploadFile}/>
           <div className="flex w-full shrink-0 gap-2 md:w-max mb-2">
             <Button
-              className="flex items-center gap-3 bg-primary" size="sm"
+              className="flex items-center gap-3 bg-primary normal-case" size="sm"
               onClick={onUploadButtonClick}
             >
               <ArrowUpOnSquareIcon strokeWidth={2} className="h-4 w-4" />
-                Upload Invoice
+                Upload Now
             </Button>
             <Button
-              className="flex items-center gap-3 bg-secondary" size="sm"
+              className="flex items-center gap-3 bg-secondary custom-button" size="sm"
               onClick={onUploadedPDFClick}
             >
-                Uploaded PDF
+                Current Uploads
             </Button>
           </div>
           <Tabs value={categories[0].id} className="mx-auto">

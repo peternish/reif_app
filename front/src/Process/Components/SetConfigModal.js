@@ -22,7 +22,8 @@ var stringSimiliarity = require("string-similarity");
 // import InvoiceSetting from"./InvoiceSetting";
 
 export function SetConfigModal({ showModal, setShowModal, handlePageUpdate, 
-                                invoiceData, setInvoiceData, businessCategory, expenseCategory, customerCategory, vendorCategory, descriptionCategory, pMethodCategory, pAccountCategory, importedFileID}) {
+                                invoiceData, setInvoiceData, businessCategory, expenseCategory, customerCategory, vendorCategory, descriptionCategory, pMethodCategory, pAccountCategory, importedFileID,
+                                isUploadClicked, setIsUploadClicked}) {
     const [expenseItem, setExpenseItem] =useState([])
     const [depositItem, setDepositItem] = useState([])
     const [businessCategoryItem, setBusinessCategoryItem] = useState([])
@@ -41,6 +42,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
     const [pAccountCategoryId, setPAccountCategoryId] = useState()
 
     var newBusinessCategory = React.createRef()
+    var newExpenseCategory = React.createRef()
     var newCustomerCategory = React.createRef()
     var newVendorCategory = React.createRef()
     var newDescriptionCategory = React.createRef()
@@ -49,13 +51,31 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
 
     const handleError = useErrorHandler()
     const handleOpen = () => {
-        console.log(invoiceData)
+        // console.log(invoiceState)
         setShowModal(false)
     }
     const getCategories = async () => {
-        if (!businessCategoryId || businessCategoryId == 'addNew')
+        if (!businessCategoryId || businessCategoryId == -1)
             return;
-        console.log(customerCategory)
+        if (invoiceState == 'Deposit') {
+            var tmpExpenseCategory = expenseCategory.filter((val) => (val['type'] == 'income' && val['business_category_id'] == businessCategoryId))
+            tmpExpenseCategory.push({
+                id: -1,
+                name: 'Add Deposit',
+                business_category_id: businessCategoryId
+            })
+            setExpenseItem(tmpExpenseCategory)
+        }
+        else {
+            var tmpExpenseCategory = expenseCategory.filter((val) => (val['type'] == 'expense' && val['business_category_id'] == businessCategoryId))
+            tmpExpenseCategory.push({
+                id: -1,
+                name: 'Add Expense',
+                business_category_id: businessCategoryId
+            })
+            setExpenseItem(tmpExpenseCategory)
+        }
+
         var tmpCustomerItem = customerCategory.filter((val) => val['business_category_id'] == businessCategoryId)
 
         tmpCustomerItem.push({
@@ -99,16 +119,25 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
     }
     
     const getBusinessCategories = async () => {
-        var expense = expenseCategory.filter((val) => val['id'] == expenseCategoryId)
-        if (expense.length > 0) {
-            var tmpBusinessCategory = businessCategory.filter((val) => val['id'] == expense[0]['business_category_id']) 
-            tmpBusinessCategory.push({
-                id: 'addNew',
-                name: 'Add Business Category',
-                children: []
-            })
-            setBusinessCategoryItem(tmpBusinessCategory)
-        }
+        if (invoiceState == '') return false;
+        
+        // var expense = expenseCategory.filter((val) => val['id'] == expenseCategoryId)
+        // if (expense.length > 0) {
+        //     var tmpBusinessCategory = businessCategory.filter((val) => val['id'] == expense[0]['business_category_id']) 
+        //     tmpBusinessCategory.push({
+        //         id: 'addNew',
+        //         name: 'Add Business Category',
+        //         children: []
+        //     })
+        //     setBusinessCategoryItem(tmpBusinessCategory)
+        // }
+        // var tmpBusinessCategory = businessCategory
+        businessCategory.push({
+            id: '-1',
+            name: 'Add Business Category',
+            children: []
+        })
+        setBusinessCategoryItem(businessCategory)
     }
 
     const getExpenseOrDeposit = async () => {
@@ -199,6 +228,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
                 });
                 // console.log(tmp)
                 setInvoiceData(tmp)
+                setIsUploadClicked(!isUploadClicked)
                 // setBusinessCategoryId(0)
                 // SetInvoiceState('')
                 // setExpenseCategoryId(0)
@@ -234,6 +264,28 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         setBusinessCategoryItem([...tmpBusinessCategory])
         newBusinessCategory.current.value = ''
     }
+    //Add Expense/Deposit     
+    const clickAddExpenseCategory = async () => {
+        var newValue = newExpenseCategory.current.value
+        if (newValue == '') return false;
+        var tmp = customerItem.filter((val) => {
+            return val['name'] == newValue
+        });
+        if (tmp.length !== 0) {
+            return;
+        }
+        
+        const res = await Axios().get(`/api/addExpenseCategoryFromProcess/?name=${newValue}&businessCategoryId=${businessCategoryId}&type=${invoiceState}`)
+        var newAddedValue = {
+            id: res.data.id,
+            name: newValue,
+            businessCategoryId: businessCategoryId
+        }
+        var tmpExpenseCategory = expenseItem
+        tmpExpenseCategory.splice(tmpExpenseCategory.length - 1, 0, newAddedValue)
+        setExpenseItem([...tmpExpenseCategory])
+        newExpenseCategory.current.value = ''
+    }
     //Customer Category
     const clickAddCustomerCategory = async () => {
         var newValue = newCustomerCategory.current.value
@@ -253,6 +305,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         }
         var tmpCustomerCategory = customerItem
         tmpCustomerCategory.splice(tmpCustomerCategory.length - 1, 0, newAddedValue)
+        console.log(tmpCustomerCategory)
         setCustomerItem([...tmpCustomerCategory])
         newCustomerCategory.current.value = ''
     }
@@ -276,7 +329,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         var tmpVendorCategory = vendorItem
         tmpVendorCategory.splice(tmpVendorCategory.length - 1, 0, newAddedValue)
         // console.log(tmpBusinessCategory)
-        setCustomerItem([...tmpVendorCategory])
+        setVendorItem([...tmpVendorCategory])
         newVendorCategory.current.value = ''
     }
     //Description Category
@@ -299,7 +352,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         var tmpDescriptionCategory = descriptionItem
         tmpDescriptionCategory.splice(tmpDescriptionCategory.length - 1, 0, newAddedValue)
         // console.log(tmpBusinessCategory)
-        setCustomerItem([...tmpDescriptionCategory])
+        setDescriptionItem([...tmpDescriptionCategory])
         newDescriptionCategory.current.value = ''
     }
 
@@ -323,7 +376,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         var tmpPMethodCategory = pMethodItem
         tmpPMethodCategory.splice(tmpPMethodCategory.length - 1, 0, newAddedValue)
         // console.log(tmpBusinessCategory)
-        setCustomerItem([...tmpPMethodCategory])
+        setPMethodItem([...tmpPMethodCategory])
         newPMethodCategory.current.value = ''
     }
     //PAccount Category
@@ -346,7 +399,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         var tmpPAccountCategory = pAccountItem
         tmpPAccountCategory.splice(tmpPAccountCategory.length - 1, 0, newAddedValue)
         // console.log(tmpBusinessCategory)
-        setCustomerItem([...tmpPAccountCategory])
+        setPAccountItem([...tmpPAccountCategory])
         newPAccountCategory.current.value = ''
     }
 
@@ -356,12 +409,14 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
     }, [businessCategoryId])
     
     useEffect(() => {
-        getExpenseOrDeposit()
+        // getExpenseOrDeposit()
+        // getCategories()
+        getBusinessCategories()
     }, [invoiceState])
 
-    useEffect(() => {
-        getBusinessCategories()
-    }, [expenseCategoryId])
+    // useEffect(() => {
+    //     // getBusinessCategories()
+    // }, [expenseCategoryId])
 
     // const handleClick = async () => {
     //     try {
@@ -419,34 +474,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
             <DialogHeader>Set Config</DialogHeader>
             <DialogBody className="" >
             <div>
-                <div class="mb-3 border-b-4">
-                    <div class="mb-1 grid grid-cols-5">
-                        <div class="col-span-1">
-                            <Select label="Type" value={invoiceState} onChange={(val) => {SetInvoiceState(val)}}>
-                                <Option value="Deposit">Deposit</Option>
-                                <Option value="Expense">Expense</Option>
-                            </Select>
-                        </div>
-                        {
-                            invoiceState == '' && (
-                            <Select label="Expense/Deposit">
-                                <Option value="Deposit">Deposit</Option>
-                                <Option value="Expense">Expense</Option>
-                            </Select>)
-                        }
-                    
-                        {
-                            invoiceState != '' && (
-                            <Select label={invoiceState} onChange={(val) => setExpenseCategoryId(val)}>
-                                {expenseItem.map((expense) => {
-                                    return (
-                                        <Option value={expense.id} key={expense.id}>{expense.name}</Option>
-                                    )
-                                })}
-                            </Select>)
-                        }
-                        <h5 class="ms-2 col-span-2 flex flex-col justify-end text-tertiary">(*Please Select Type First!)</h5>
-                    </div>
+                <div class="mb-1 border-b-4">
                     <div class="mb-1 grid grid-cols-12">
                         <div class='col-span-11'>
                             <h1 class="font-bold">Text:</h1>
@@ -457,46 +485,116 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
                             
                         </div>
                     </div>
+                    <div class="mb-1 grid grid-cols-12">
+                        <div class='col-span-11'>
+                            <h1 class="font-bold">Amount:</h1>
+                            {
+                                invoiceData[0] != null &&
+                                <div class="mb-2">{invoiceData[0][2]}</div>
+                            }
+                            
+                        </div>
+                    </div>
+                    <div class="mb-4 grid grid-cols-5">
+                        <div class="col-span-1">
+                            <Select label="Type" value={invoiceState} onChange={(val) => {SetInvoiceState(val)}}>
+                                <Option value="Deposit">Deposit</Option>
+                                <Option value="Expense">Expense</Option>
+                            </Select>
+                        </div>
+                        <div class="col-span-2">
+                            <Select label="Entities" onChange={(val) => {
+                            // if (val == 'addNew') {
+                            //     return;
+                            // }
+                            setBusinessCategoryId(val)
+                            }}>
+                            {businessCategoryItem.map((business) => {
+                                if (business.id == -1) {
+                                    return (
+                                        <Option value={business.id} key={business.id}
+                                            onClickCapture={(e) => {
+                                                if (e.target.type == 'button')
+                                                    clickAddBusinessCategory();
+                                                e.preventDefault(); 
+                                                e.stopPropagation();}}
+                                        >
+                                            <div className="flex relative w-100">
+                                                <Input inputRef={newBusinessCategory} onKeyDown={(e) => {
+                                                    if (e.key === ' ') {
+                                                        e.stopPropagation();
+                                                    }
+                                                }}/>
+                                                <Button className="flex items-center bg-primary ml-2" size="sm" onClick={clickAddBusinessCategory}>
+                                                    <PlusIcon strokeWidth={2} className="h-5 w-5" /> Add
+                                                </Button>
+                                            </div>
+                                        </Option>
+                                    )
+                                }
+                                else {
+                                    return (
+                                        <Option value={business.id} key={business.id}>{business.name}</Option>
+                                    )
+                                }
+                            })}
+                            </Select>
+                        </div>
+                        <h5 class="ms-2 col-span-2 flex flex-col justify-end text-tertiary">(*Please Select Entity First!)</h5>
+                    </div>
                     <div className="mb-1 grid grid-cols-3 grid-center">
                         {/* <Select label="Method" value={method} onChange={(val) => {setMethod(val)}}> */}
-                        <div class="col-span-1 mb-4">
-                            <Select label="Entities" onChange={(val) => {
-                                    if (val == 'addNew') {
-                                        return;
-                                    }
-                                    setBusinessCategoryId(val)
-                                }}>
-                                {businessCategoryItem.map((business) => {
-                                    if (business.id == 'addNew') {
-                                        return (
-                                            <Option value={business.id} key={business.id}
-                                                onClickCapture={(e) => {
-                                                    if (e.target.type == 'button')
-                                                        clickAddBusinessCategory();
-                                                    e.preventDefault(); 
-                                                    e.stopPropagation();}}
-                                            >
-                                                <div className="relative flex w-full">
-                                                    <div className="flex relative w-full">
-                                                        <Input inputRef={newBusinessCategory} onKeyDown={(e) => {
-                                                            if (e.key === ' ') {
-                                                                e.stopPropagation();
-                                                            }
-                                                        }}/>
-                                                        <Button className="flex items-center bg-primary ml-2" size="sm" onClick={clickAddBusinessCategory}>
-                                                            <PlusIcon strokeWidth={2} className="h-5 w-5" /> Add
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                            </Option>
-                                        )
-                                    }
-                                    else {
-                                        return (
-                                            <Option value={business.id} key={business.id}>{business.name}</Option>
-                                        )
-                                    }
+                        <div class="col-span-1 mb-4">   
+                        {/* {
+                            invoiceState == '' && (
+                            <Select label="Expense/Deposit">
+                                <Option value="Deposit">Deposit</Option>
+                                <Option value="Expense">Expense</Option>
+                            </Select>)
+                        } */}
+                    
+                        {/* {
+                            invoiceState != '' && (
+                            <Select label={invoiceState} onChange={(val) => setExpenseCategoryId(val)}>
+                                {expenseItem.map((expense) => {
+                                    return (
+                                        <Option value={expense.id} key={expense.id}>{expense.name}</Option>
+                                    )
                                 })}
+                            </Select>)
+                        } */}
+                            <Select label="Expense/Deposit" onChange={(val) => setExpenseCategoryId(val)}>
+                                    {expenseItem.map((expense) => {
+                                        if (expense.id == -1) {
+                                            return (
+                                                <Option value={expense.id} key={expense.id}
+                                                    onClickCapture={(e) => {
+                                                        if (e.target.type == 'button')
+                                                            clickAddExpenseCategory();
+                                                        e.preventDefault(); 
+                                                        e.stopPropagation();}}
+                                                >
+                                                    <div className="relative flex w-full">
+                                                        <div className="flex relative w-full">
+                                                            <Input inputRef={newExpenseCategory} onKeyDown={(e) => {
+                                                                if (e.key === ' ') {
+                                                                    e.stopPropagation();
+                                                                }
+                                                            }}/>
+                                                            <Button className="flex items-center bg-primary ml-2" size="sm" onClick={clickAddExpenseCategory}>
+                                                                <PlusIcon strokeWidth={2} className="h-5 w-5" /> Add
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </Option>
+                                            )
+                                        }
+                                        else {
+                                            return (
+                                                <Option value={expense.id} key={expense.id}>{expense.name}</Option>
+                                            )
+                                        }
+                                    })}
                             </Select>
                         </div>
                         <div class="col-span-1 mb-4">
@@ -692,7 +790,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
                         {
                             invoiceState == 'Deposit' && 
                             <div class="col-span-1">
-                                <Select label="Paid By" onChange={(val) => setPAccountCategoryId(val)}>
+                                <Select label="Paid To" onChange={(val) => setPAccountCategoryId(val)}>
                                     {pAccountItem.map((pAccount) => {
                                         if (pAccount.id == -1) {
                                             return (
