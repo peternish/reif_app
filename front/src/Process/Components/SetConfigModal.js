@@ -52,6 +52,13 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
     const handleError = useErrorHandler()
     const handleOpen = () => {
         // console.log(invoiceState)
+        setBusinessCategoryId('')
+        SetInvoiceState('')
+        setExpenseCategoryId('')
+        setVendorCategoryId('')
+        setDescriptionCategoryId('')
+        setPMethodCategoryId('')
+        setPAccountCategoryId('')
         setShowModal(false)
     }
     const getCategories = async () => {
@@ -132,6 +139,8 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
         //     setBusinessCategoryItem(tmpBusinessCategory)
         // }
         // var tmpBusinessCategory = businessCategory
+        if (businessCategory.filter(b => b.id == '-1').length > 0)
+            return
         businessCategory.push({
             id: '-1',
             name: 'Add Business Category',
@@ -162,37 +171,11 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
             alert('Please Select Type!');
             return false;
         }
-        if (!expenseCategoryId) {
-            alert('Please Select Deposit or Expense');
-            return false;
-        }
         if (!businessCategoryId) {
             alert('Please Select Entity!');
             return false;
         }
-        if (!customerCategoryId) {
-            alert('Please Select Customer!');
-            return false;
-        }
-        if (!vendorCategoryId) {
-            alert('Please Select Vendor!')
-            return false
-        }
-        if (!descriptionCategoryId) {
-            alert('Please Select Description!')
-            return false
-        }
-        if (!pMethodCategory) {
-            alert('Please Select Payment Method!')
-            return false
-        }
-        if (!pAccountCategoryId) {
-            if (invoiceState == 'Deposit')
-                alert('Please Selct Paid By!')
-            if (invoiceState == 'Expense')
-                alert('Please Select Pay from Account!')
-            return false
-        }
+       
         // if (!businessCategoryId || !invoiceState || !expenseCategoryId || !vendorCategoryId || !descriptionCategoryId || !pMethodCategoryId || !pAccountCategoryId) {
         //     alert('Please select categories!');
         //     return false;
@@ -521,9 +504,7 @@ export function SetConfigModal({ showModal, setShowModal, handlePageUpdate,
                                         >
                                             <div className="flex relative w-100">
                                                 <Input inputRef={newBusinessCategory} onKeyDown={(e) => {
-                                                    if (e.key === ' ') {
-                                                        e.stopPropagation();
-                                                    }
+                                                    e.stopPropagation();
                                                 }}/>
                                                 <Button className="flex items-center bg-primary ml-2" size="sm" onClick={clickAddBusinessCategory}>
                                                     <PlusIcon strokeWidth={2} className="h-5 w-5" /> Add
