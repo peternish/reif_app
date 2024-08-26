@@ -136,12 +136,12 @@ export default function Landing() {
                 />
               </div>
             </div>
-            <div className="flex flex-wrap items-center mt-32 mb-20">
+            {/* <div className="flex flex-wrap items-center mt-32 mb-20">
               <video className="h-5/6 w-5/6 rounded-lg p-3xl mx-auto" controls poster="https://irp.cdn-website.com/56499217/dms3rep/multi/commercial+1+screenshot.jpg">
                 <source src="https://vid.cdn-website.com/56499217/videos/v4CcXIT3Q9aZ1FzmaTig_TV+Ad+1+-+FINAL-v.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-            </div>
+            </div> */}
           </div>
         </section>
 
@@ -185,7 +185,7 @@ export default function Landing() {
           </div>
         </section>
 
-        <section className="pt-20 pb-48">
+        {/* <section className="pt-20 pb-48">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap justify-center text-center mb-24">
               <div className="w-full lg:w-6/12 px-4">
@@ -290,7 +290,7 @@ export default function Landing() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         <section className="pb-20 relative block bg-gray-900">
           <div
